@@ -1,0 +1,66 @@
+@model IEnumerable<HTQLNS.Controllers.DepartmentViewModel>
+@{
+    ViewData["Title"] = "Phòng ban & Chức vụ";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn text-white px-4 py-2" style="background-color: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-right: none; border-radius: 8px 0 0 8px;">Phòng ban</button>
+        <button type="button" class="btn text-secondary px-4 py-2" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0;">Chức vụ</button>
+    </div>
+    
+    <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2 px-4 py-2" style="font-weight: 500; border-radius: 8px;">
+        <i class="fa-solid fa-plus"></i> Thêm phòng ban
+    </a>
+</div>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        string colorVar = $"var(--{item.ColorClass})";
+        string bgVar = item.ColorClass == "accent-purple" ? "rgba(146, 119, 248, 0.15)" :
+                       item.ColorClass == "accent-red" ? "rgba(243, 67, 67, 0.15)" :
+                       item.ColorClass == "accent-green" ? "rgba(27, 185, 154, 0.15)" :
+                       "rgba(245, 158, 11, 0.15)";
+                       
+        <div class="col-md-6 mb-4">
+            <div class="card-dark h-100 position-relative" style="border-top: 4px solid @colorVar;">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="mb-1 fw-bold">@item.TenPhongBan</h5>
+                        <div class="text-secondary" style="font-size: 0.8rem;">@item.MaPhongBan</div>
+                    </div>
+                    <div class="fw-bold" style="font-size: 2rem; color: @colorVar; line-height: 1;">@item.SoLuongNhanVien</div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="text-secondary mb-1" style="font-size: 0.85rem;">Trưởng phòng</div>
+                    <div style="font-weight: 500;">@item.TruongPhong</div>
+                </div>
+                
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    @if (item.ChucVus.Any())
+                    {
+                        foreach (var role in item.ChucVus)
+                        {
+                            <span class="badge rounded-pill" style="background-color: @bgVar; color: @colorVar; font-weight: 500; padding: 6px 12px;">@role</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-secondary" style="font-style: italic; font-size: 0.85rem;">Chưa có chức vụ</span>
+                    }
+                </div>
+                
+                <div class="row gx-3 mt-auto">
+                    <div class="col-6">
+                        <button class="btn w-100 py-2" style="border: 1px solid var(--border-color); color: var(--text-secondary); border-radius: 8px;">Chỉnh sửa</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn w-100 py-2" style="background-color: @bgVar; color: @colorVar; border: none; border-radius: 8px;">Chi tiết</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

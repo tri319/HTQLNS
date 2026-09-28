@@ -1,0 +1,50 @@
+@model HTQLNS.Models.DonXinNghi
+@{
+    ViewData["Title"] = "Tạo Đơn Xin Nghỉ";
+    var nhanViens = ViewBag.NhanViens as IEnumerable<HTQLNS.Models.NhanVien>;
+}
+
+<div class="d-flex align-items-center mb-4 gap-3">
+    <a asp-action="Index" class="btn btn-dark" style="background-color: var(--card-bg); border-color: var(--border-color);"><i class="fa-solid fa-arrow-left"></i></a>
+    <h4 class="mb-0 fw-bold">Tạo Đơn Xin Nghỉ Mới</h4>
+</div>
+
+<div class="card-dark">
+    <form asp-action="Create" method="post">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label text-secondary">Nhân viên</label>
+                <select asp-for="MaNhanVien" class="form-select text-white bg-dark border-secondary" required>
+                    <option value="">-- Chọn nhân viên --</option>
+                    @if (nhanViens != null)
+                    {
+                        foreach (var nv in nhanViens)
+                        {
+                            <option value="@nv.MaNhanVien">@nv.HoTen - @nv.MaNhanVien</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Từ ngày</label>
+                <input asp-for="TuNgay" type="date" class="form-control text-white bg-dark border-secondary" required />
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Đến ngày</label>
+                <input asp-for="DenNgay" type="date" class="form-control text-white bg-dark border-secondary" required />
+            </div>
+            
+            <div class="col-md-12 mb-4">
+                <label class="form-label text-secondary">Lý do</label>
+                <textarea asp-for="LyDo" class="form-control text-white bg-dark border-secondary" rows="3" required placeholder="Nhập lý do xin nghỉ..."></textarea>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-end gap-3 mt-4 pt-3" style="border-top: 1px solid var(--border-color);">
+            <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy</a>
+            <button type="submit" class="btn btn-primary px-4">Nộp đơn</button>
+        </div>
+    </form>
+</div>

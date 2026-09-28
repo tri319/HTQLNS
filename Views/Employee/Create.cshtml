@@ -1,0 +1,65 @@
+@model HTQLNS.Models.NhanVien
+@{
+    ViewData["Title"] = "Thêm Nhân Viên";
+    var phongBans = ViewBag.PhongBans as IEnumerable<HTQLNS.Models.PhongBan>;
+    var chucVus = ViewBag.ChucVus as IEnumerable<HTQLNS.Models.ChucVu>;
+}
+
+<div class="d-flex align-items-center mb-4 gap-3">
+    <a asp-action="Index" class="btn btn-dark" style="background-color: var(--card-bg); border-color: var(--border-color);"><i class="fa-solid fa-arrow-left"></i></a>
+    <h4 class="mb-0 fw-bold">Thêm Nhân Viên Mới</h4>
+</div>
+
+<div class="card-dark">
+    <form asp-action="Create" method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Họ và tên</label>
+                <input asp-for="HoTen" class="form-control text-white bg-dark border-secondary" required placeholder="Nhập họ và tên..." />
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Số điện thoại</label>
+                <input asp-for="SDT" class="form-control text-white bg-dark border-secondary" placeholder="Nhập SĐT..." />
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Email</label>
+                <input asp-for="Email" type="email" class="form-control text-white bg-dark border-secondary" placeholder="Nhập Email..." />
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Phòng ban</label>
+                <select asp-for="MaPhongBan" class="form-select text-white bg-dark border-secondary" required>
+                    <option value="">-- Chọn phòng ban --</option>
+                    @if (phongBans != null)
+                    {
+                        foreach (var pb in phongBans)
+                        {
+                            <option value="@pb.MaPhongBan">@pb.TenPhongBan</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <label class="form-label text-secondary">Chức vụ</label>
+                <select asp-for="MaChucVu" class="form-select text-white bg-dark border-secondary" required>
+                    <option value="">-- Chọn chức vụ --</option>
+                    @if (chucVus != null)
+                    {
+                        foreach (var cv in chucVus)
+                        {
+                            <option value="@cv.MaChucVu">@cv.TenChucVu</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-end gap-3 mt-4 pt-3" style="border-top: 1px solid var(--border-color);">
+            <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy</a>
+            <button type="submit" class="btn btn-primary px-4">Lưu nhân viên</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,132 @@
+@{
+    ViewData["Title"] = "Báo cáo";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn text-white px-4" style="background-color: var(--accent-purple); border: none; border-radius: 8px 0 0 8px;">Tổng quan</button>
+        <button type="button" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-right: none;">Theo phòng ban</button>
+        <button type="button" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-radius: 0 8px 8px 0;">OT & Chuyên cần</button>
+    </div>
+    
+    <div class="d-flex gap-3">
+        <select class="form-select text-white" style="background-color: var(--card-bg); border-color: var(--border-color); width: 150px;">
+            <option>Tháng 9/2026</option>
+            <option>Tháng 8/2026</option>
+            <option>Tháng 7/2026</option>
+        </select>
+        <button class="btn" style="background-color: rgba(146, 119, 248, 0.2); color: #d0c4ff; border: 1px solid rgba(146, 119, 248, 0.5); font-weight: 500; border-radius: 8px;">
+            <i class="fa-solid fa-download me-1"></i> Xuất báo cáo
+        </button>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Stat 1 -->
+    <div class="col-md-3">
+        <div class="card-dark h-100" style="background: linear-gradient(180deg, rgba(27,185,154,0.1) 0%, var(--card-bg) 100%);">
+            <div class="text-secondary fw-semibold mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">TỶ LỆ CHUYÊN CẦN</div>
+            <div class="fw-bold mb-2" style="font-size: 2.5rem; color: var(--accent-green); line-height: 1;">@ViewBag.AttendanceRate%</div>
+            <div class="text-secondary" style="font-size: 0.8rem;"><i class="fa-solid fa-arrow-up me-1" style="color: var(--accent-green);"></i> 3pt so tháng trước</div>
+        </div>
+    </div>
+    
+    <!-- Stat 2 -->
+    <div class="col-md-3">
+        <div class="card-dark h-100" style="background: linear-gradient(180deg, rgba(146,119,248,0.1) 0%, var(--card-bg) 100%);">
+            <div class="text-secondary fw-semibold mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">TỔNG GIỜ OT</div>
+            <div class="fw-bold mb-2" style="font-size: 2.5rem; color: #d0c4ff; line-height: 1;">@ViewBag.TotalOT</div>
+            <div class="text-secondary" style="font-size: 0.8rem;"><i class="fa-solid fa-arrow-down me-1"></i> 55h so tháng trước</div>
+        </div>
+    </div>
+    
+    <!-- Stat 3 -->
+    <div class="col-md-3">
+        <div class="card-dark h-100" style="background: linear-gradient(180deg, rgba(245,158,11,0.1) 0%, var(--card-bg) 100%);">
+            <div class="text-secondary fw-semibold mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">NGHỈ PHÉP DUYỆT</div>
+            <div class="fw-bold mb-2" style="font-size: 2.5rem; color: var(--accent-orange); line-height: 1;">@ViewBag.ApprovedLeaves</div>
+            <div class="text-secondary" style="font-size: 0.8rem;">@ViewBag.PendingLeaves đơn đang chờ</div>
+        </div>
+    </div>
+    
+    <!-- Stat 4 -->
+    <div class="col-md-3">
+        <div class="card-dark h-100" style="background: linear-gradient(180deg, rgba(56,189,248,0.1) 0%, var(--card-bg) 100%);">
+            <div class="text-secondary fw-semibold mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">NHÂN VIÊN</div>
+            <div class="fw-bold mb-2" style="font-size: 2.5rem; color: #38bdf8; line-height: 1;">@ViewBag.TotalEmployees</div>
+            <div class="text-secondary" style="font-size: 0.8rem;">Tổng số nhân sự hiện tại</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Chart 1 -->
+    <div class="col-md-6">
+        <div class="card-dark h-100">
+            <h5 class="mb-1 fw-bold">Chuyên cần 6 tháng</h5>
+            <p class="text-secondary mb-5" style="font-size: 0.85rem;">Tỷ lệ % theo tháng</p>
+            
+            <div style="height: 200px; display: flex; align-items: flex-end; justify-content: space-around; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);">
+                <div class="text-center">
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">96.2%</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T4</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-orange); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">94.8%</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T5</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-green); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">97.1%</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T6</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-orange); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">93.5%</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T7</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">95.4%</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T8</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-green); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">98.4%</div>
+                    <div class="fw-bold" style="font-size: 0.8rem; color: white;">T9</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chart 2 -->
+    <div class="col-md-6">
+        <div class="card-dark h-100">
+            <h5 class="mb-1 fw-bold">Tổng giờ OT</h5>
+            <p class="text-secondary mb-5" style="font-size: 0.85rem;">Giờ làm thêm theo tháng</p>
+            
+            <div style="height: 200px; display: flex; align-items: flex-end; justify-content: space-around; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);">
+                <div class="text-center">
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">124</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T4</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">98</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T5</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">135</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T6</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">110</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T7</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">142</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">T8</div>
+                </div>
+                <div class="text-center">
+                    <div style="color: #d0c4ff; font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">87</div>
+                    <div class="fw-bold" style="font-size: 0.8rem; color: white;">T9</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

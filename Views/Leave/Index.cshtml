@@ -1,0 +1,116 @@
+@model IEnumerable<HTQLNS.Controllers.LeaveViewModel>
+@{
+    ViewData["Title"] = "Đơn xin nghỉ";
+    int choDuyet = Model.Count(m => m.TrangThai == "Chờ duyệt");
+    int daDuyet = Model.Count(m => m.TrangThai == "Đã duyệt");
+    int tongDon = Model.Count();
+}
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card-dark d-flex align-items-center" style="background: linear-gradient(to right, rgba(245, 158, 11, 0.1), var(--card-bg)); border-left: 3px solid var(--accent-orange);">
+            <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-orange); margin-right: 20px;">@choDuyet</div>
+            <div class="text-secondary fw-semibold">Chờ duyệt</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-dark d-flex align-items-center" style="background: linear-gradient(to right, rgba(27, 185, 154, 0.1), var(--card-bg)); border-left: 3px solid var(--accent-green);">
+            <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-green); margin-right: 20px;">@daDuyet</div>
+            <div class="text-secondary fw-semibold">Đã duyệt tháng này</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-dark d-flex align-items-center" style="background: linear-gradient(to right, rgba(146, 119, 248, 0.1), var(--card-bg)); border-left: 3px solid var(--accent-purple);">
+            <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-purple); margin-right: 20px;">@tongDon</div>
+            <div class="text-secondary fw-semibold">Tổng đơn</div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn text-white" style="background-color: var(--accent-purple); border: none; border-radius: 8px 0 0 8px; padding: 8px 20px;">Tất cả</button>
+        <button type="button" class="btn text-secondary" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-right: none;">Chờ duyệt</button>
+        <button type="button" class="btn text-secondary" style="background-color: transparent; border: 1px solid var(--border-color); border-right: none;">Đã duyệt</button>
+        <button type="button" class="btn text-secondary" style="background-color: transparent; border: 1px solid var(--border-color); border-radius: 0 8px 8px 0;">Từ chối</button>
+    </div>
+    
+    <a asp-action="Create" class="btn" style="background-color: rgba(146, 119, 248, 0.2); color: #d0c4ff; border: 1px solid rgba(146, 119, 248, 0.5); font-weight: 500; border-radius: 8px;">
+        <i class="fa-solid fa-plus me-1"></i> Tạo đơn
+    </a>
+</div>
+
+<div class="card-dark p-0 overflow-hidden">
+    <table class="table table-borderless mb-0 custom-table">
+        <thead style="border-bottom: 1px solid var(--border-color);">
+            <tr>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">MÃ ĐƠN</th>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">NHÂN VIÊN</th>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">LOẠI ĐƠN</th>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">THỜI GIAN</th>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">LÝ DO</th>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">GỬI NGÀY</th>
+                <th class="text-secondary fw-semibold py-3 px-4 text-center" style="font-size: 0.75rem;">TRẠNG THÁI</th>
+                <th class="text-secondary fw-semibold py-3 px-4 text-center" style="font-size: 0.75rem;">THAO TÁC</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string typeColor = item.LoaiDon == "Nghỉ phép" ? "var(--accent-orange)" : "var(--accent-purple)";
+                string typeBg = item.LoaiDon == "Nghỉ phép" ? "rgba(245, 158, 11, 0.15)" : "rgba(146, 119, 248, 0.15)";
+                
+                string statusColor = item.TrangThai == "Chờ duyệt" ? "var(--accent-orange)" : "var(--accent-green)";
+                
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td class="px-4 py-4 align-middle text-secondary">@item.MaDon</td>
+                    <td class="px-4 py-4 align-middle">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar" style="background-color: @item.AvatarColor;">@item.AvatarChar</div>
+                            <div>
+                                <div class="fw-semibold">@item.NhanVienTen</div>
+                                <div class="text-secondary" style="font-size: 0.75rem;">@item.PhongBanTen</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 align-middle text-center">
+                        <span class="badge rounded-pill" style="background-color: @typeBg; color: @typeColor;">@item.LoaiDon</span>
+                    </td>
+                    <td class="px-4 py-4 align-middle text-secondary" style="font-size: 0.85rem;">
+                        @Html.Raw(item.ThoiGianText)
+                    </td>
+                    <td class="px-4 py-4 align-middle text-secondary">@item.LyDo</td>
+                    <td class="px-4 py-4 align-middle text-secondary">@item.GuiNgayText</td>
+                    <td class="px-4 py-4 align-middle text-center">
+                        <div class="fw-bold" style="color: @statusColor;">
+                            @Html.Raw(item.TrangThai == "Chờ duyệt" ? "Chờ<br>duyệt" : "Đã duyệt")
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 align-middle text-center">
+                        @if (item.TrangThai == "Chờ duyệt")
+                        {
+                            <form asp-action="Approve" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.MaDon" />
+                                <input type="hidden" name="type" value="@item.LoaiDon" />
+                                <button type="submit" class="btn btn-sm" style="background-color: rgba(27, 185, 154, 0.15); color: var(--accent-green); border: none;"><i class="fa-solid fa-check d-block mb-1"></i> Duyệt</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm" style="border: 1px solid var(--border-color); color: var(--text-secondary);">Chi tiết</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <style>
+        .custom-table th {
+            background-color: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-color);
+        }
+    </style>
+}

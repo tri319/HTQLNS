@@ -1,0 +1,179 @@
+@{
+    ViewData["Title"] = "Tổng quan";
+}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card card-dark">
+            <h6 class="stat-card-title">TỔNG NHÂN VIÊN</h6>
+            <div class="stat-card-value">248</div>
+            <div class="stat-card-desc">+6 tháng này</div>
+            <div class="stat-icon purple">
+                <i class="fa-solid fa-users"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card card-dark">
+            <h6 class="stat-card-title">CÓ MẶT HÔM NAY</h6>
+            <div class="stat-card-value green">192</div>
+            <div class="stat-card-desc">77.4% hiện diện</div>
+            <div class="stat-icon green">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card card-dark">
+            <h6 class="stat-card-title">CA BỊ THIẾU</h6>
+            <div class="stat-card-value orange">3</div>
+            <div class="stat-card-desc">Ca tối thiếu 2 NV</div>
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card card-dark">
+            <h6 class="stat-card-title">ĐƠN CHỜ DUYỆT</h6>
+            <div class="stat-card-value red">12</div>
+            <div class="stat-card-desc">5 đổi ca &bull; 7 nghỉ</div>
+            <div class="stat-icon red">
+                <i class="fa-solid fa-file-circle-question"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Chart Area -->
+    <div class="col-md-8">
+        <div class="card-dark h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="mb-1">Tỷ lệ chuyên cần</h5>
+                    <p class="text-secondary" style="font-size: 0.85rem; margin: 0;">Tuần 38, tháng 9/2026</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" style="border-color: var(--border-color); color: var(--text-secondary);">7 ngày qua</button>
+                </div>
+            </div>
+            
+            <div style="height: 250px; display: flex; align-items: flex-end; justify-content: space-around; padding-bottom: 30px; border-bottom: 1px solid var(--border-color);">
+                <!-- Mock Chart Bars -->
+                <div class="text-center">
+                    <div style="height: 120px; width: 8px; background: var(--border-color); border-radius: 4px; margin: 0 auto 10px;">
+                        <div style="height: 94%; width: 100%; background: var(--accent-purple); border-radius: 4px; margin-top: auto;"></div>
+                    </div>
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.8rem;">94%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75rem;">T2</div>
+                </div>
+                
+                <div class="text-center">
+                    <div style="height: 120px; width: 8px; background: var(--border-color); border-radius: 4px; margin: 0 auto 10px;">
+                        <div style="height: 88%; width: 100%; background: var(--accent-purple); border-radius: 4px; margin-top: auto;"></div>
+                    </div>
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.8rem;">88%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75rem;">T3</div>
+                </div>
+                
+                <div class="text-center">
+                    <div style="height: 120px; width: 8px; background: var(--border-color); border-radius: 4px; margin: 0 auto 10px;">
+                        <div style="height: 96%; width: 100%; background: var(--accent-green); border-radius: 4px; margin-top: auto;"></div>
+                    </div>
+                    <div style="color: var(--accent-green); font-weight: 600; font-size: 0.8rem;">96%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75rem;">T4</div>
+                </div>
+                
+                <div class="text-center">
+                    <div style="height: 120px; width: 8px; background: var(--border-color); border-radius: 4px; margin: 0 auto 10px;">
+                        <div style="height: 91%; width: 100%; background: var(--accent-purple); border-radius: 4px; margin-top: auto;"></div>
+                    </div>
+                    <div style="color: var(--accent-purple); font-weight: 600; font-size: 0.8rem;">91%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75rem;">T5</div>
+                </div>
+                
+                <div class="text-center">
+                    <div style="height: 120px; width: 8px; background: var(--border-color); border-radius: 4px; margin: 0 auto 10px;">
+                        <div style="height: 98%; width: 100%; background: var(--accent-green); border-radius: 4px; margin-top: auto;"></div>
+                    </div>
+                    <div style="color: var(--accent-green); font-weight: 600; font-size: 0.8rem;">98%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75rem;">T6</div>
+                </div>
+                
+                <div class="text-center">
+                    <div style="height: 120px; width: 8px; background: var(--border-color); border-radius: 4px; margin: 0 auto 10px;">
+                        <div style="height: 85%; width: 100%; background: var(--accent-orange); border-radius: 4px; margin-top: auto;"></div>
+                    </div>
+                    <div style="color: var(--accent-orange); font-weight: 600; font-size: 0.8rem;">85%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75rem;">T7</div>
+                </div>
+                
+                <div class="text-center">
+                    <div style="height: 120px; width: 8px; background: var(--border-color); border-radius: 4px; margin: 0 auto 10px;">
+                        <div style="height: 79%; width: 100%; background: var(--accent-orange); border-radius: 4px; margin-top: auto;"></div>
+                    </div>
+                    <div style="color: var(--accent-orange); font-weight: 600; font-size: 0.8rem;">79%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.75rem;">CN</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar List -->
+    <div class="col-md-4">
+        <div class="card-dark h-100">
+            <h5 class="mb-4">Ca hôm nay</h5>
+            
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="font-size: 0.85rem;">Ca sáng 06:00-14:00</span>
+                    <span style="font-size: 0.85rem;"><span class="text-warning fw-bold">30</span><span class="text-secondary">/32</span></span>
+                </div>
+                <div class="progress" style="height: 6px; background-color: var(--border-color);">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 93%;" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="font-size: 0.85rem;">Ca chiều 14:00-22:00</span>
+                    <span style="font-size: 0.85rem;"><span class="text-success fw-bold">40</span><span class="text-secondary">/40</span></span>
+                </div>
+                <div class="progress" style="height: 6px; background-color: var(--border-color);">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%; background-color: var(--accent-green) !important;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="font-size: 0.85rem;">Ca tối 22:00-06:00</span>
+                    <span style="font-size: 0.85rem;"><span style="color: var(--accent-purple); font-weight: bold;">25</span><span class="text-secondary">/28</span></span>
+                </div>
+                <div class="progress" style="height: 6px; background-color: var(--border-color);">
+                    <div class="progress-bar" role="progressbar" style="width: 89%; background-color: var(--accent-purple);" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            
+            <hr style="border-color: var(--border-color); margin: 30px 0;">
+            
+            <h6 class="text-secondary mb-3" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">ĐÔNG NHẤT HÔM NAY</h6>
+            
+            <div class="d-flex justify-content-between mb-3 align-items-center">
+                <span style="font-size: 0.9rem;">Bar & Lounge</span>
+                <span class="text-secondary" style="font-size: 0.8rem;">42 NV</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3 align-items-center">
+                <span style="font-size: 0.9rem;">Sân khấu</span>
+                <span class="text-secondary" style="font-size: 0.8rem;">38 NV</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <span style="font-size: 0.9rem;">Lễ tân</span>
+                <span class="text-secondary" style="font-size: 0.8rem;">24 NV</span>
+            </div>
+        </div>
+    </div>
+</div>

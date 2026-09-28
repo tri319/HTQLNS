@@ -1,0 +1,55 @@
+@model HTQLNS.Models.LichPhanCong
+@{
+    ViewData["Title"] = "Tạo Ca Làm Mới";
+    var nhanViens = ViewBag.NhanViens as IEnumerable<HTQLNS.Models.NhanVien>;
+    var loaiCas = ViewBag.LoaiCas as IEnumerable<HTQLNS.Models.LoaiCaLam>;
+}
+
+<div class="d-flex align-items-center mb-4 gap-3">
+    <a asp-action="Index" class="btn btn-dark" style="background-color: var(--card-bg); border-color: var(--border-color);"><i class="fa-solid fa-arrow-left"></i></a>
+    <h4 class="mb-0 fw-bold">Phân Công Ca Làm Việc</h4>
+</div>
+
+<div class="card-dark" style="max-width: 700px;">
+    <form asp-action="Create" method="post">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label text-secondary">Nhân viên</label>
+                <select asp-for="MaNhanVien" class="form-select text-white bg-dark border-secondary" required>
+                    <option value="">-- Chọn nhân viên --</option>
+                    @if (nhanViens != null)
+                    {
+                        foreach (var nv in nhanViens)
+                        {
+                            <option value="@nv.MaNhanVien">@nv.HoTen - @nv.MaNhanVien</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Loại ca làm</label>
+                <select asp-for="MaLoaiCa" class="form-select text-white bg-dark border-secondary" required>
+                    <option value="">-- Chọn ca làm --</option>
+                    @if (loaiCas != null)
+                    {
+                        foreach (var ca in loaiCas)
+                        {
+                            <option value="@ca.MaLoaiCa">@ca.TenCa (@ca.GioBatDau.ToString(@"hh\:mm") - @ca.GioKetThuc.ToString(@"hh\:mm"))</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <label class="form-label text-secondary">Ngày làm</label>
+                <input asp-for="NgayLam" type="date" class="form-control text-white bg-dark border-secondary" required />
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-end gap-3 pt-3" style="border-top: 1px solid var(--border-color);">
+            <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy</a>
+            <button type="submit" class="btn btn-primary px-4">Lưu phân công</button>
+        </div>
+    </form>
+</div>

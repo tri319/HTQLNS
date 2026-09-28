@@ -1,0 +1,136 @@
+@model IEnumerable<HTQLNS.Controllers.ScheduleRowModel>
+@{
+    ViewData["Title"] = "Lịch & Phân ca";
+    
+    // Create ordered list of days starting from Monday
+    var daysOfWeek = new List<DayOfWeek> {
+        DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, 
+        DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday
+    };
+    
+    var dayNames = new[] { "CN", "T2", "T3", "T4", "T5", "T6", "T7" };
+    
+    DateTime today = DateTime.Today;
+    int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+    DateTime startOfWeek = today.AddDays(-1 * diff);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-dark" style="background-color: var(--card-bg); border-color: var(--border-color);"><i class="fa-solid fa-chevron-left"></i></button>
+        <h5 class="mb-0 fw-bold">@startOfWeek.ToString("dd") - @startOfWeek.AddDays(6).ToString("dd MMMM, yyyy")</h5>
+        <button class="btn btn-dark" style="background-color: var(--card-bg); border-color: var(--border-color);"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="btn ms-2" style="background-color: rgba(27, 185, 154, 0.15); color: var(--accent-green); border: none; border-radius: 8px;">Tuần này</button>
+    </div>
+    
+    <div class="d-flex gap-3">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn text-white px-4" style="background-color: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-right: none; border-radius: 8px 0 0 8px;">Lịch tuần</button>
+            <button type="button" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0;">Danh sách</button>
+        </div>
+        
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2 px-4" style="font-weight: 500; border-radius: 8px;">
+            <i class="fa-solid fa-plus"></i> Tạo ca
+        </a>
+    </div>
+</div>
+
+<div class="card-dark p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-bordered mb-0 custom-schedule-table" style="border-color: var(--border-color);">
+            <thead>
+                <tr>
+                    <th class="text-secondary fw-semibold text-center align-middle" style="width: 10%; background-color: rgba(255, 255, 255, 0.02);">CA LÀM</th>
+                    @for (int i = 0; i < 7; i++)
+                    {
+                        var currentDate = startOfWeek.AddDays(i);
+                        var isToday = currentDate == today;
+                        
+                        <th class="text-center py-3 position-relative" style="width: 12.8%; @(isToday ? "background-color: rgba(27, 185, 154, 0.05);" : "background-color: rgba(255, 255, 255, 0.02);")">
+                            <div style="@(isToday ? "color: var(--accent-green); font-weight: bold;" : "color: var(--text-secondary);") margin-bottom: 4px;">@dayNames[(int)daysOfWeek[i]]</div>
+                            <div style="@(isToday ? "color: var(--accent-green); font-weight: bold;" : "color: var(--text-secondary);") font-size: 0.85rem;">@currentDate.ToString("dd/MM")</div>
+                            @if (isToday)
+                            {
+                                <div style="width: 6px; height: 6px; background-color: var(--accent-green); border-radius: 50%; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);"></div>
+                            }
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model)
+                {
+                    <tr>
+                        <td class="p-3">
+                            <div class="p-3 rounded" style="background-color: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--@(row.ColorClass));">
+                                <div class="fw-bold mb-2" style="color: var(--@(row.ColorClass));">@row.TenCa</div>
+                                <div class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-circle" style="font-size: 0.4rem; color: var(--@(row.ColorClass)); margin-right: 4px;"></i>@Html.Raw(row.ThoiGian.Replace(" - ", "<br>&nbsp;&nbsp;&nbsp;&nbsp;-<br>&nbsp;&nbsp;&nbsp;"))</div>
+                            </div>
+                        </td>
+                        
+                        @foreach (var day in daysOfWeek)
+                        {
+                            var cell = row.Days[day];
+                            <td class="p-2 align-top">
+                                @if (cell.NhanVienNames.Any())
+                                {
+                                    foreach (var nv in cell.NhanVienNames)
+                                    {
+                                        string shortName = nv.Length > 15 ? nv.Substring(0, 12) + "..." : nv; // Simple shortening
+                                        string colorName = row.ColorClass.Replace("accent-", "");
+                                        <div class="shift-item @colorName">@shortName</div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-center text-secondary pt-4">—</div>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .custom-schedule-table th, 
+        .custom-schedule-table td {
+            border-color: var(--border-color);
+        }
+        
+        .shift-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .shift-item:hover {
+            filter: brightness(1.1);
+        }
+        
+        .shift-item.orange {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .shift-item.purple {
+            background-color: rgba(146, 119, 248, 0.1);
+            color: var(--accent-purple);
+            border: 1px solid rgba(146, 119, 248, 0.2);
+        }
+        
+        .shift-item.green {
+            background-color: rgba(27, 185, 154, 0.1);
+            color: var(--accent-green);
+            border: 1px solid rgba(27, 185, 154, 0.2);
+        }
+    </style>
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StarZone HRM</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HTQLNS.styles.css" asp-append-version="true" />
+</head>
+<body>
+    
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <div>
+                <div class="logo-text">StarZone HRM</div>
+                <div class="logo-version">V3.2.1</div>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="menu-title">Điều hướng</li>
+            
+            <li class="menu-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">
+                <a asp-controller="Home" asp-action="Index" class="menu-link">
+                    <i class="fa-solid fa-border-all menu-icon"></i>
+                    <span>Tổng quan</span>
+                </a>
+            </li>
+            
+            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Employee" ? "active" : "")">
+                <a asp-controller="Employee" asp-action="Index" class="menu-link">
+                    <i class="fa-solid fa-users menu-icon"></i>
+                    <span>Nhân viên</span>
+                </a>
+            </li>
+            
+            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
+                <a asp-controller="Department" asp-action="Index" class="menu-link">
+                    <i class="fa-solid fa-building-user menu-icon"></i>
+                    <span>Phòng ban & Chức vụ</span>
+                </a>
+            </li>
+            
+            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Schedule" ? "active" : "")">
+                <a asp-controller="Schedule" asp-action="Index" class="menu-link">
+                    <i class="fa-solid fa-calendar-days menu-icon"></i>
+                    <span>Lịch & Phân ca</span>
+                </a>
+            </li>
+            
+            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Leave" ? "active" : "")">
+                <a asp-controller="Leave" asp-action="Index" class="menu-link">
+                    <i class="fa-solid fa-file-signature menu-icon"></i>
+                    <span>Đơn xin nghỉ</span>
+                </a>
+            </li>
+            
+            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Attendance" ? "active" : "")">
+                <a asp-controller="Attendance" asp-action="Index" class="menu-link">
+                    <i class="fa-solid fa-clock-rotate-left menu-icon"></i>
+                    <span>Chấm công</span>
+                </a>
+            </li>
+            
+            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")">
+                <a asp-controller="Report" asp-action="Index" class="menu-link">
+                    <i class="fa-solid fa-chart-line menu-icon"></i>
+                    <span>Báo cáo</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <a asp-controller="Account" asp-action="Login" class="text-decoration-none">
+                <div class="user-profile-sm">
+                    <div class="avatar">A</div>
+                    <div class="user-info">
+                        <p class="user-name">Admin</p>
+                        <p class="user-role">Quản trị viên</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right-from-bracket text-secondary" style="font-size: 0.8rem;"></i>
+                </div>
+            </a>
+            
+            <div class="text-center mt-3">
+                <a href="#" class="text-secondary text-decoration-none" style="font-size: 0.8rem;">
+                    <i class="fa-solid fa-caret-left me-1"></i> Thu gọn
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Topbar -->
+        <header class="app-topbar">
+            <div class="page-title-wrapper">
+                <div class="page-breadcrumb">
+                    Overview &bull; <span>@ViewData["Title"]</span>
+                </div>
+                <div class="page-date">Thứ Ba, 23 tháng 9 năm 2026</div>
+            </div>
+            
+            <div class="topbar-actions">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Tìm kiếm..." />
+                </div>
+                
+                <div class="notification-btn">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge-notification">3</span>
+                </div>
+                
+                <div class="user-profile-sm" style="padding: 6px 12px; background: transparent; border: 1px solid var(--border-color);">
+                    <div class="avatar" style="width: 28px; height: 28px; font-size: 0.8rem;">A</div>
+                    <div class="user-info">
+                        <p class="user-name" style="font-size: 0.8rem;">Admin</p>
+                        <p class="user-role" style="font-size: 0.7rem;">Quản trị viên</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Body -->
+        <div class="page-content">
+            @RenderBody()
+        </div>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
