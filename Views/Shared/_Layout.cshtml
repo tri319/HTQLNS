@@ -34,19 +34,25 @@
                 </a>
             </li>
             
-            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Employee" ? "active" : "")">
-                <a asp-controller="Employee" asp-action="Index" class="menu-link">
-                    <i class="fa-solid fa-users menu-icon"></i>
-                    <span>Nhân viên</span>
-                </a>
-            </li>
+            @if (User.IsInRole("Admin") || User.IsInRole("HR") || User.IsInRole("Manager"))
+            {
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Employee" ? "active" : "")">
+                    <a asp-controller="Employee" asp-action="Index" class="menu-link">
+                        <i class="fa-solid fa-users menu-icon"></i>
+                        <span>Nhân sự</span>
+                    </a>
+                </li>
+            }
             
-            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
-                <a asp-controller="Department" asp-action="Index" class="menu-link">
-                    <i class="fa-solid fa-building-user menu-icon"></i>
-                    <span>Phòng ban & Chức vụ</span>
-                </a>
-            </li>
+            @if (User.IsInRole("Admin") || User.IsInRole("HR"))
+            {
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
+                    <a asp-controller="Department" asp-action="Index" class="menu-link">
+                        <i class="fa-solid fa-building-user menu-icon"></i>
+                        <span>Phòng ban & Chức vụ</span>
+                    </a>
+                </li>
+            }
             
             <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Schedule" ? "active" : "")">
                 <a asp-controller="Schedule" asp-action="Index" class="menu-link">
@@ -69,12 +75,15 @@
                 </a>
             </li>
             
-            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")">
-                <a asp-controller="Report" asp-action="Index" class="menu-link">
-                    <i class="fa-solid fa-chart-line menu-icon"></i>
-                    <span>Báo cáo</span>
-                </a>
-            </li>
+            @if (User.IsInRole("Admin") || User.IsInRole("HR"))
+            {
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")">
+                    <a asp-controller="Report" asp-action="Index" class="menu-link">
+                        <i class="fa-solid fa-chart-line menu-icon"></i>
+                        <span>Báo cáo</span>
+                    </a>
+                </li>
+            }
         </ul>
         
         <div class="sidebar-footer">
