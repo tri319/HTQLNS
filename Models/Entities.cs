@@ -19,7 +19,12 @@ namespace HTQLNS.Models
         public string? TrangThai { get; set; }
         
         public string MaNhanVien { get; set; } = string.Empty;
+        [ForeignKey("MaNhanVien")]
+        public virtual NhanVien? NhanVien { get; set; }
+
         public string MaVaiTro { get; set; } = string.Empty;
+        [ForeignKey("MaVaiTro")]
+        public virtual VaiTro? VaiTro { get; set; }
     }
 
     public class VaiTro
@@ -71,7 +76,12 @@ namespace HTQLNS.Models
         public string? Email { get; set; }
         
         public string MaPhongBan { get; set; } = string.Empty;
+        [ForeignKey("MaPhongBan")]
+        public virtual PhongBan? PhongBan { get; set; }
+
         public string MaChucVu { get; set; } = string.Empty;
+        [ForeignKey("MaChucVu")]
+        public virtual ChucVu? ChucVu { get; set; }
     }
 
     public class LoaiCaLam
@@ -98,7 +108,12 @@ namespace HTQLNS.Models
         public string? TrangThai { get; set; }
         
         public string MaNhanVien { get; set; } = string.Empty;
+        [ForeignKey("MaNhanVien")]
+        public virtual NhanVien? NhanVien { get; set; }
+
         public string MaLoaiCa { get; set; } = string.Empty;
+        [ForeignKey("MaLoaiCa")]
+        public virtual LoaiCaLam? LoaiCaLam { get; set; }
     }
 
     public class ChamCong
@@ -113,6 +128,8 @@ namespace HTQLNS.Models
         public string? TrangThai { get; set; }
         
         public string MaLich { get; set; } = string.Empty;
+        [ForeignKey("MaLich")]
+        public virtual LichPhanCong? LichPhanCong { get; set; }
     }
 
     public class DonXinNghi
@@ -129,6 +146,8 @@ namespace HTQLNS.Models
         public string? TrangThai { get; set; } // Chờ duyệt, Đã duyệt, Từ chối
         
         public string MaNhanVien { get; set; } = string.Empty;
+        [ForeignKey("MaNhanVien")]
+        public virtual NhanVien? NhanVien { get; set; }
     }
 
     public class YeuCauDoiCa
@@ -144,8 +163,16 @@ namespace HTQLNS.Models
         public string? TrangThai { get; set; }
         
         public string MaNhanVien { get; set; } = string.Empty;
+        [ForeignKey("MaNhanVien")]
+        public virtual NhanVien? NhanVien { get; set; }
+
         public string MaLichCu { get; set; } = string.Empty;
+        [ForeignKey("MaLichCu")]
+        public virtual LichPhanCong? LichCu { get; set; }
+
         public string MaLichMoi { get; set; } = string.Empty;
+        [ForeignKey("MaLichMoi")]
+        public virtual LichPhanCong? LichMoi { get; set; }
     }
     
     public class NhatKyThaoTac
@@ -161,5 +188,7 @@ namespace HTQLNS.Models
         public string? NoiDung { get; set; }
         
         public string MaTaiKhoan { get; set; } = string.Empty;
+        [ForeignKey("MaTaiKhoan")]
+        public virtual TaiKhoan? TaiKhoan { get; set; }
     }
 }

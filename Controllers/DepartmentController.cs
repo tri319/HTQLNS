@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using HTQLNS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace HTQLNS.Controllers
         public string ColorClass { get; set; } = "accent-purple";
     }
 
+    [Authorize(Roles = "Admin,HR")]
     public class DepartmentController : Controller
     {
         private readonly ApplicationDbContext _context;

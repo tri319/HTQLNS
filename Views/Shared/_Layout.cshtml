@@ -34,19 +34,25 @@
                 </a>
             </li>
             
-            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Employee" ? "active" : "")">
-                <a asp-controller="Employee" asp-action="Index" class="menu-link">
-                    <i class="fa-solid fa-users menu-icon"></i>
-                    <span>Nhân viên</span>
-                </a>
-            </li>
+            @if (User.IsInRole("Admin") || User.IsInRole("HR") || User.IsInRole("Manager"))
+            {
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Employee" ? "active" : "")">
+                    <a asp-controller="Employee" asp-action="Index" class="menu-link">
+                        <i class="fa-solid fa-users menu-icon"></i>
+                        <span>Nhân sự</span>
+                    </a>
+                </li>
+            }
             
-            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
-                <a asp-controller="Department" asp-action="Index" class="menu-link">
-                    <i class="fa-solid fa-building-user menu-icon"></i>
-                    <span>Phòng ban & Chức vụ</span>
-                </a>
-            </li>
+            @if (User.IsInRole("Admin") || User.IsInRole("HR"))
+            {
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
+                    <a asp-controller="Department" asp-action="Index" class="menu-link">
+                        <i class="fa-solid fa-building-user menu-icon"></i>
+                        <span>Phòng ban & Chức vụ</span>
+                    </a>
+                </li>
+            }
             
             <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Schedule" ? "active" : "")">
                 <a asp-controller="Schedule" asp-action="Index" class="menu-link">
@@ -69,23 +75,26 @@
                 </a>
             </li>
             
-            <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")">
-                <a asp-controller="Report" asp-action="Index" class="menu-link">
-                    <i class="fa-solid fa-chart-line menu-icon"></i>
-                    <span>Báo cáo</span>
-                </a>
-            </li>
+            @if (User.IsInRole("Admin") || User.IsInRole("HR"))
+            {
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")">
+                    <a asp-controller="Report" asp-action="Index" class="menu-link">
+                        <i class="fa-solid fa-chart-line menu-icon"></i>
+                        <span>Báo cáo</span>
+                    </a>
+                </li>
+            }
         </ul>
         
         <div class="sidebar-footer">
-            <a asp-controller="Account" asp-action="Login" class="text-decoration-none">
+            <a asp-controller="Account" asp-action="Logout" class="text-decoration-none">
                 <div class="user-profile-sm">
-                    <div class="avatar">A</div>
+                    <div class="avatar">@(User.Identity?.Name?.Substring(0, 1).ToUpper() ?? "U")</div>
                     <div class="user-info">
-                        <p class="user-name">Admin</p>
-                        <p class="user-role">Quản trị viên</p>
+                        <p class="user-name">@(User.FindFirst("HoTen")?.Value ?? User.Identity?.Name ?? "Người dùng")</p>
+                        <p class="user-role">@(User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "User")</p>
                     </div>
-                    <i class="fa-solid fa-arrow-right-from-bracket text-secondary" style="font-size: 0.8rem;"></i>
+                    <i class="fa-solid fa-arrow-right-from-bracket text-secondary" style="font-size: 0.8rem;" title="Đăng xuất"></i>
                 </div>
             </a>
             
@@ -120,10 +129,10 @@
                 </div>
                 
                 <div class="user-profile-sm" style="padding: 6px 12px; background: transparent; border: 1px solid var(--border-color);">
-                    <div class="avatar" style="width: 28px; height: 28px; font-size: 0.8rem;">A</div>
+                    <div class="avatar" style="width: 28px; height: 28px; font-size: 0.8rem;">@(User.Identity?.Name?.Substring(0, 1).ToUpper() ?? "U")</div>
                     <div class="user-info">
-                        <p class="user-name" style="font-size: 0.8rem;">Admin</p>
-                        <p class="user-role" style="font-size: 0.7rem;">Quản trị viên</p>
+                        <p class="user-name" style="font-size: 0.8rem;">@(User.FindFirst("HoTen")?.Value ?? User.Identity?.Name ?? "Người dùng")</p>
+                        <p class="user-role" style="font-size: 0.7rem;">@(User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "User")</p>
                     </div>
                 </div>
             </div>
