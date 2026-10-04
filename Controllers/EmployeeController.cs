@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using HTQLNS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace HTQLNS.Controllers
 {
+    [Authorize(Roles = "Admin,HR,Manager")]
     public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;

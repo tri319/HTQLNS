@@ -11,6 +11,14 @@ namespace HTQLNS
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             
+            // Add Authentication
+            builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.AccessDeniedPath = "/Account/AccessDenied";
+                });
+            
             // Add DbContext
             builder.Services.AddDbContext<HTQLNS.Models.ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -46,6 +54,7 @@ namespace HTQLNS
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -32,6 +32,8 @@ namespace HTQLNS.Models
                 context.NhanViens.AddRange(nv1, nv2, nv3, nv4);
                 context.SaveChanges();
                 
+
+                
                 // LoaiCaLam
                 var caSang = new LoaiCaLam { MaLoaiCa = "CA001", TenCa = "Ca sáng", GioBatDau = new TimeSpan(6, 0, 0), GioKetThuc = new TimeSpan(14, 0, 0) };
                 var caChieu = new LoaiCaLam { MaLoaiCa = "CA002", TenCa = "Ca chiều", GioBatDau = new TimeSpan(14, 0, 0), GioKetThuc = new TimeSpan(22, 0, 0) };
@@ -60,6 +62,26 @@ namespace HTQLNS.Models
                 var dc1 = new YeuCauDoiCa { MaYeuCau = "DC001", MaNhanVien = nv1.MaNhanVien, MaLichCu = lich1.MaLich, MaLichMoi = lich2.MaLich, NgayGui = DateTime.Today.AddDays(-1), LyDo = "Lịch cá nhân", TrangThai = "Đã duyệt" };
                 context.YeuCauDoiCas.Add(dc1);
                 
+                context.SaveChanges();
+            }
+
+            if (!context.TaiKhoans.Any())
+            {
+                var adminRole = context.VaiTros.FirstOrDefault(v => v.TenVaiTro == "Admin") ?? new VaiTro { MaVaiTro = "VT001", TenVaiTro = "Admin" };
+                var userRole = context.VaiTros.FirstOrDefault(v => v.TenVaiTro == "Nhân viên") ?? new VaiTro { MaVaiTro = "VT002", TenVaiTro = "Nhân viên" };
+                
+                if (!context.VaiTros.Any())
+                {
+                    context.VaiTros.AddRange(adminRole, userRole);
+                    context.SaveChanges();
+                }
+
+                var nv1 = context.NhanViens.FirstOrDefault(n => n.MaNhanVien == "NV001");
+                var nv2 = context.NhanViens.FirstOrDefault(n => n.MaNhanVien == "NV002");
+
+                var tk1 = new TaiKhoan { MaTaiKhoan = "TK001", TenDangNhap = "admin", MatKhau = "123456", MaNhanVien = nv1?.MaNhanVien ?? "NV001", MaVaiTro = adminRole.MaVaiTro, TrangThai = "Hoạt động" };
+                var tk2 = new TaiKhoan { MaTaiKhoan = "TK002", TenDangNhap = "nhanvien", MatKhau = "123456", MaNhanVien = nv2?.MaNhanVien ?? "NV002", MaVaiTro = userRole.MaVaiTro, TrangThai = "Hoạt động" };
+                context.TaiKhoans.AddRange(tk1, tk2);
                 context.SaveChanges();
             }
         }
