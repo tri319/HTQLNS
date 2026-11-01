@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Từ chối truy cập";
+}
+
+<div class="card-dark text-center py-5 my-4">
+    <div class="mb-3">
+        <i class="fa-solid fa-shield-halved fa-4x" style="color: var(--accent-red);"></i>
+    </div>
+    <h3 class="text-white fw-bold mb-2">Không có quyền truy cập</h3>
+    <p class="text-secondary mb-4">Tài khoản của bạn (@(User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "Nhân viên")) không có quyền truy cập vào chức năng quản trị này.</p>
+    <div>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary px-4" style="border-radius: 8px;">
+            <i class="fa-solid fa-house me-2"></i>Về trang Tổng quan
+        </a>
+    </div>
+</div>
+

@@ -14,10 +14,15 @@
     <form asp-action="Create" method="post">
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label text-secondary">Họ và tên</label>
+                <label class="form-label text-secondary">Họ và tên <span class="text-danger">*</span></label>
                 <input asp-for="HoTen" class="form-control text-white bg-dark border-secondary" required placeholder="Nhập họ và tên..." />
             </div>
             
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Ngày sinh</label>
+                <input asp-for="NgaySinh" type="date" class="form-control text-white bg-dark border-secondary" />
+            </div>
+
             <div class="col-md-6 mb-3">
                 <label class="form-label text-secondary">Số điện thoại</label>
                 <input asp-for="SDT" class="form-control text-white bg-dark border-secondary" placeholder="Nhập SĐT..." />
@@ -29,7 +34,7 @@
             </div>
             
             <div class="col-md-6 mb-3">
-                <label class="form-label text-secondary">Phòng ban</label>
+                <label class="form-label text-secondary">Phòng ban <span class="text-danger">*</span></label>
                 <select asp-for="MaPhongBan" class="form-select text-white bg-dark border-secondary" required>
                     <option value="">-- Chọn phòng ban --</option>
                     @if (phongBans != null)
@@ -43,7 +48,7 @@
             </div>
             
             <div class="col-md-6 mb-4">
-                <label class="form-label text-secondary">Chức vụ</label>
+                <label class="form-label text-secondary">Chức vụ <span class="text-danger">*</span></label>
                 <select asp-for="MaChucVu" class="form-select text-white bg-dark border-secondary" required>
                     <option value="">-- Chọn chức vụ --</option>
                     @if (chucVus != null)

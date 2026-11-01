@@ -2,28 +2,39 @@
 @{
     ViewData["Title"] = "Tạo Đơn Xin Nghỉ";
     var nhanViens = ViewBag.NhanViens as IEnumerable<HTQLNS.Models.NhanVien>;
+    bool isAdmin = User.IsInRole("Admin");
+    string myMaNV = ViewBag.MyMaNhanVien ?? "";
 }
 
 <div class="d-flex align-items-center mb-4 gap-3">
     <a asp-action="Index" class="btn btn-dark" style="background-color: var(--card-bg); border-color: var(--border-color);"><i class="fa-solid fa-arrow-left"></i></a>
-    <h4 class="mb-0 fw-bold">Tạo Đơn Xin Nghỉ Mới</h4>
+    <h4 class="mb-0 fw-bold">Tạo Đơn Xin Nghỉ Phép</h4>
 </div>
 
-<div class="card-dark">
+<div class="card-dark" style="max-width: 750px;">
     <form asp-action="Create" method="post">
         <div class="row">
             <div class="col-md-12 mb-3">
-                <label class="form-label text-secondary">Nhân viên</label>
-                <select asp-for="MaNhanVien" class="form-select text-white bg-dark border-secondary" required>
-                    <option value="">-- Chọn nhân viên --</option>
-                    @if (nhanViens != null)
-                    {
-                        foreach (var nv in nhanViens)
+                <label class="form-label text-secondary">Nhân viên làm đơn</label>
+                @if (!isAdmin && !string.IsNullOrEmpty(myMaNV))
+                {
+                    var me = nhanViens?.FirstOrDefault(n => n.MaNhanVien == myMaNV);
+                    <input type="hidden" asp-for="MaNhanVien" value="@myMaNV" />
+                    <input type="text" class="form-control text-white bg-dark border-secondary" value="@(me != null ? $"{me.HoTen} - {me.MaNhanVien}" : myMaNV)" readonly />
+                }
+                else
+                {
+                    <select asp-for="MaNhanVien" class="form-select text-white bg-dark border-secondary" required>
+                        <option value="">-- Chọn nhân viên --</option>
+                        @if (nhanViens != null)
                         {
-                            <option value="@nv.MaNhanVien">@nv.HoTen - @nv.MaNhanVien</option>
+                            foreach (var nv in nhanViens)
+                            {
+                                <option value="@nv.MaNhanVien">@nv.HoTen - @nv.MaNhanVien</option>
+                            }
                         }
-                    }
-                </select>
+                    </select>
+                }
             </div>
             
             <div class="col-md-6 mb-3">
@@ -37,8 +48,8 @@
             </div>
             
             <div class="col-md-12 mb-4">
-                <label class="form-label text-secondary">Lý do</label>
-                <textarea asp-for="LyDo" class="form-control text-white bg-dark border-secondary" rows="3" required placeholder="Nhập lý do xin nghỉ..."></textarea>
+                <label class="form-label text-secondary">Lý do xin nghỉ</label>
+                <textarea asp-for="LyDo" class="form-control text-white bg-dark border-secondary" rows="3" required placeholder="Nhập lý do xin nghỉ chi tiết..."></textarea>
             </div>
         </div>
         

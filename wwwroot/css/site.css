@@ -383,7 +383,16 @@ h6 {
     color: var(--accent-red);
 }
 
-/* Remove default bootstrap background */
+/* Remove default bootstrap background & ensure white text in dark tables */
 .bg-white {
     background-color: transparent !important;
+}
+
+.table,
+.custom-table,
+.custom-table td,
+.custom-table th {
+    --bs-table-color: #ffffff;
+    --bs-table-bg: transparent;
+    color: var(--text-primary);
 }

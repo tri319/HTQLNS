@@ -1,0 +1,158 @@
+@model List<HTQLNS.Models.TaiKhoan>
+@{
+    ViewData["Title"] = "Duyệt tài khoản";
+    var nhanViens = ViewBag.NhanViens as List<HTQLNS.Models.NhanVien>;
+    var vaiTros   = ViewBag.VaiTros   as List<HTQLNS.Models.VaiTro>;
+    var phongBans = ViewBag.PhongBans as List<HTQLNS.Models.PhongBan>;
+    var chucVus   = ViewBag.ChucVus   as List<HTQLNS.Models.ChucVu>;
+    var existingCodes = nhanViens?.Select(n => n.MaNhanVien).ToHashSet() ?? new HashSet<string>();
+    int nextCodeNum = 1;
+}
+
+<div class="content-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="page-heading">Duyệt tài khoản</h1>
+        <p class="text-secondary">Xem xét và phê duyệt các tài khoản đăng ký mới qua Google</p>
+    </div>
+    <a asp-action="AllAccounts" class="btn btn-outline-light" style="border-color:var(--border-color);">
+        <i class="fa-solid fa-users-gear me-2"></i>Tất cả tài khoản
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success mb-4" style="background: rgba(27,185,154,.15); border-color:#1bb99a; color:#1bb99a;">
+        <i class="fa-solid fa-check-circle me-2"></i>@TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mb-4" style="background: rgba(243,67,67,.15); border-color:#f34343; color:#f34343;">
+        <i class="fa-solid fa-circle-xmark me-2"></i>@TempData["Error"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="stats-card text-center py-5">
+        <i class="fa-solid fa-check-double fa-3x mb-3" style="color:#1bb99a;"></i>
+        <h4 class="text-white">Không có tài khoản nào chờ duyệt</h4>
+        <p class="text-secondary">Tất cả tài khoản đã được xử lý.</p>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var tk in Model)
+        {
+            while (existingCodes.Contains($"NV{nextCodeNum:D3}"))
+            {
+                nextCodeNum++;
+            }
+            string suggestedCode = $"NV{nextCodeNum:D3}";
+            existingCodes.Add(suggestedCode);
+            <div class="col-12">
+                <div class="stats-card" style="border-left: 3px solid #f59e0b;">
+                    <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#a881e6,#7c5cbf);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:1.2rem;flex-shrink:0;">
+                                @(string.IsNullOrEmpty(tk.HoTen) ? "?" : tk.HoTen.Substring(0,1).ToUpper())
+                            </div>
+                            <div>
+                                <div class="text-white fw-semibold">@(tk.HoTen ?? "Chưa có")</div>
+                                <div class="text-secondary" style="font-size:.9rem;">@tk.TenDangNhap</div>
+                                <div class="d-flex gap-3 mt-1" style="font-size:.85rem;">
+                                    <span class="text-secondary"><i class="fa-solid fa-cake-candles me-1" style="color:#f59e0b;"></i>@(tk.NgaySinh?.ToString("dd/MM/yyyy") ?? "—")</span>
+                                    <span class="badge" style="background:rgba(245,158,11,.2);color:#f59e0b;">Chờ duyệt</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <!-- Nút Duyệt -->
+                            <button class="btn btn-sm" style="background:#1bb99a;color:white;" 
+                                    data-bs-toggle="modal" data-bs-target="#approveModal-@tk.MaTaiKhoan">
+                                <i class="fa-solid fa-check me-1"></i>Duyệt & Cấp mã NV
+                            </button>
+                            <!-- Nút Từ chối -->
+                            <form asp-action="RejectAccount" method="post" class="d-inline">
+                                <input type="hidden" name="maTaiKhoan" value="@tk.MaTaiKhoan" />
+                                <button type="submit" class="btn btn-sm" style="background:#f34343;color:white;"
+                                        onclick="return confirm('Từ chối tài khoản @tk.TenDangNhap?')">
+                                    <i class="fa-solid fa-xmark me-1"></i>Từ chối
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Duyệt -->
+            <div class="modal fade" id="approveModal-@tk.MaTaiKhoan" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" style="background:#1a1b2e;border:1px solid var(--border-color);">
+                        <div class="modal-header" style="border-color:var(--border-color);">
+                            <h5 class="modal-title text-white">Duyệt tài khoản: @tk.TenDangNhap</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form asp-action="ApproveAccount" method="post">
+                            <input type="hidden" name="maTaiKhoan" value="@tk.MaTaiKhoan" />
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label text-secondary">Họ và tên</label>
+                                    <input type="text" name="hoTen" class="form-control" style="background:#0c0d14;border-color:var(--border-color);color:white;" value="@tk.HoTen" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-secondary">Mã nhân viên <span class="text-warning">*</span> <small class="text-success">(Đã gợi ý mã mới chưa trùng)</small></label>
+                                    <input type="text" name="maNhanVienMoi" class="form-control" style="background:#0c0d14;border-color:var(--border-color);color:white;" value="@suggestedCode" placeholder="VD: @suggestedCode" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-secondary">Phòng ban</label>
+                                    <select name="maPhongBan" class="form-select" style="background:#0c0d14;border-color:var(--border-color);color:white;" required>
+                                        @if (phongBans != null)
+                                        {
+                                            @foreach (var pb in phongBans)
+                                            {
+                                                <option value="@pb.MaPhongBan">@pb.TenPhongBan</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-secondary">Chức vụ</label>
+                                    <select name="maChucVu" class="form-select" style="background:#0c0d14;border-color:var(--border-color);color:white;" required>
+                                        @if (chucVus != null)
+                                        {
+                                            @foreach (var cv in chucVus)
+                                            {
+                                                <option value="@cv.MaChucVu">@cv.TenChucVu</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-secondary">Vai trò hệ thống</label>
+                                    <select name="maVaiTro" class="form-select" style="background:#0c0d14;border-color:var(--border-color);color:white;" required>
+                                        @if (vaiTros != null)
+                                        {
+                                            @foreach (var vt in vaiTros)
+                                            {
+                                                <option value="@vt.MaVaiTro">@vt.TenVaiTro</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="border-color:var(--border-color);">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn" style="background:#1bb99a;color:white;">
+                                    <i class="fa-solid fa-check me-1"></i>Xác nhận duyệt
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

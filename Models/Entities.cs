@@ -12,17 +12,21 @@ namespace HTQLNS.Models
         [StringLength(50)]
         public string TenDangNhap { get; set; } = string.Empty;
         
-        [Required]
         [StringLength(255)]
-        public string MatKhau { get; set; } = string.Empty;
+        public string? MatKhau { get; set; }
         
         public string? TrangThai { get; set; }
+
+        [StringLength(100)]
+        public string? HoTen { get; set; }
+
+        public DateTime? NgaySinh { get; set; }
         
-        public string MaNhanVien { get; set; } = string.Empty;
+        public string? MaNhanVien { get; set; }
         [ForeignKey("MaNhanVien")]
         public virtual NhanVien? NhanVien { get; set; }
 
-        public string MaVaiTro { get; set; } = string.Empty;
+        public string? MaVaiTro { get; set; }
         [ForeignKey("MaVaiTro")]
         public virtual VaiTro? VaiTro { get; set; }
     }
@@ -67,6 +71,8 @@ namespace HTQLNS.Models
         [Required]
         [StringLength(100)]
         public string HoTen { get; set; } = string.Empty;
+        
+        public DateTime? NgaySinh { get; set; }
         
         [StringLength(20)]
         public string? SDT { get; set; }

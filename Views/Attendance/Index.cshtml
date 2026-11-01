@@ -1,62 +1,143 @@
 @model IEnumerable<HTQLNS.Controllers.AttendanceViewModel>
 @{
     ViewData["Title"] = "Chấm công";
+    bool isAdmin = ViewBag.IsAdmin ?? false;
     int tongNV = Model.Count();
     int dungGio = Model.Count(m => m.TrangThai == "Đúng giờ");
     int treGio = Model.Count(m => m.TrangThai == "Trễ giờ");
     int vangMat = Model.Count(m => m.TrangThai == "Vắng mặt");
 }
 
-<div class="row mb-4">
-    <div class="col-md-3">
-        <div class="card-dark" style="background: linear-gradient(135deg, rgba(146,119,248,0.1), transparent);">
-            <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">NV TRONG CA HÔM NAY</div>
-            <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-purple); line-height: 1;">@tongNV</div>
-        </div>
+@if (TempData["Success"] != null)
+{
+    <div class="alert mb-4" style="background: rgba(27,185,154,.15); border:1px solid #1bb99a; color:#1bb99a; border-radius:8px; padding:12px 16px;">
+        <i class="fa-solid fa-check-circle me-2"></i>@TempData["Success"]
     </div>
-    <div class="col-md-3">
-        <div class="card-dark" style="background: linear-gradient(135deg, rgba(27,185,154,0.1), transparent);">
-            <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">ĐÚNG GIỜ</div>
-            <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-green); line-height: 1;">@dungGio</div>
-        </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert mb-4" style="background: rgba(243,67,67,.15); border:1px solid #f34343; color:#f34343; border-radius:8px; padding:12px 16px;">
+        <i class="fa-solid fa-circle-xmark me-2"></i>@TempData["Error"]
     </div>
-    <div class="col-md-3">
-        <div class="card-dark" style="background: linear-gradient(135deg, rgba(245,158,11,0.1), transparent);">
-            <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">TRỄ GIỜ</div>
-            <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-orange); line-height: 1;">@treGio</div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card-dark" style="background: linear-gradient(135deg, rgba(243,67,67,0.1), transparent);">
-            <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">VẮNG MẶT</div>
-            <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-red); line-height: 1;">@vangMat</div>
-        </div>
-    </div>
-</div>
+}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex gap-3">
+@if (!isAdmin)
+{
+    <!-- Employee Check-in Panel -->
+    <div class="card-dark mb-4" style="border-top: 4px solid var(--accent-purple);">
+        <h5 class="mb-4">Chấm công hôm nay (@DateTime.Now.ToString("dd/MM/yyyy"))</h5>
+        
+        @if (ViewBag.TodayShift != null)
+        {
+            var shift = ViewBag.TodayShift as HTQLNS.Models.LichPhanCong;
+            var cc = ViewBag.ChamCongToday as HTQLNS.Models.ChamCong;
+            
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <p class="text-secondary mb-1">Ca làm việc của bạn:</p>
+                    <h4 class="text-white mb-0">@ViewBag.CaLamToday</h4>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    @if (cc == null && shift != null)
+                    {
+                        <form asp-action="CheckIn" method="post" class="d-inline">
+                            <input type="hidden" name="maLich" value="@shift.MaLich" />
+                            <button type="submit" class="btn btn-lg" style="background-color: var(--accent-green); color: white; border-radius: 8px; padding: 10px 30px;">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i> Check-in
+                            </button>
+                        </form>
+                    }
+                    else if (cc != null && cc.ThoiGianCheckout == null && shift != null)
+                    {
+                        <div class="mb-2">
+                            <span class="text-success"><i class="fa-solid fa-check-circle"></i> Đã Check-in lúc @cc.ThoiGianChekin?.ToString("HH:mm")</span>
+                        </div>
+                        <form asp-action="CheckOut" method="post" class="d-inline">
+                            <input type="hidden" name="maLich" value="@shift.MaLich" />
+                            <button type="submit" class="btn btn-lg" style="background-color: var(--accent-orange); color: white; border-radius: 8px; padding: 10px 30px;">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> Check-out
+                            </button>
+                        </form>
+                    }
+                    else if (cc != null)
+                    {
+                        <div class="text-success fs-5">
+                            <i class="fa-solid fa-check-circle"></i> Đã hoàn thành ca làm
+                        </div>
+                        <p class="text-secondary mt-2 mb-0">Giờ vào: @cc.ThoiGianChekin?.ToString("HH:mm") | Giờ ra: @cc.ThoiGianCheckout?.ToString("HH:mm")</p>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <i class="fa-solid fa-calendar-xmark fa-3x text-secondary mb-3"></i>
+                <p class="text-secondary fs-5">Bạn không có lịch làm việc hôm nay.</p>
+            </div>
+        }
+    </div>
+}
+
+@if (isAdmin)
+{
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card-dark" style="background: linear-gradient(135deg, rgba(146,119,248,0.1), transparent);">
+                <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">TỔNG LƯỢT CHẤM CÔNG</div>
+                <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-purple); line-height: 1;">@tongNV</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-dark" style="background: linear-gradient(135deg, rgba(27,185,154,0.1), transparent);">
+                <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">ĐÚNG GIỜ</div>
+                <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-green); line-height: 1;">@dungGio</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-dark" style="background: linear-gradient(135deg, rgba(245,158,11,0.1), transparent);">
+                <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">TRỄ GIỜ</div>
+                <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-orange); line-height: 1;">@treGio</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-dark" style="background: linear-gradient(135deg, rgba(243,67,67,0.1), transparent);">
+                <div class="text-secondary fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">VẮNG MẶT</div>
+                <div class="fw-bold" style="font-size: 2.5rem; color: var(--accent-red); line-height: 1;">@vangMat</div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex gap-3 flex-wrap">
         <div class="d-flex align-items-center bg-dark rounded px-3 py-2" style="border: 1px solid var(--border-color);">
-            <span class="text-white me-3">@DateTime.Today.ToString("MM/dd/yyyy")</span>
+            <span class="text-white me-3">@DateTime.Today.ToString("dd/MM/yyyy")</span>
             <i class="fa-regular fa-calendar text-secondary"></i>
         </div>
         
-        <div class="btn-group" role="group">
-            <button type="button" class="btn text-white px-4" style="background-color: var(--accent-purple); border: none; border-radius: 8px 0 0 8px;">Tất cả</button>
-            <button type="button" class="btn text-secondary px-3" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-right: none;">Đúng giờ</button>
-            <button type="button" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-right: none;">Trễ</button>
-            <button type="button" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-radius: 0 8px 8px 0;">Vắng</button>
-        </div>
+        @if (isAdmin)
+        {
+            <div class="btn-group" role="group" id="attFilterGroup">
+                <button type="button" onclick="filterAttendance('all', this)" class="btn text-white px-4" style="background-color: var(--accent-purple); border: 1px solid var(--accent-purple); border-radius: 8px 0 0 8px;">Tất cả (@tongNV)</button>
+                <button type="button" onclick="filterAttendance('Đúng giờ', this)" class="btn text-secondary px-3" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-right: none;">Đúng giờ (@dungGio)</button>
+                <button type="button" onclick="filterAttendance('Trễ giờ', this)" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-right: none;">Trễ (@treGio)</button>
+                <button type="button" onclick="filterAttendance('Vắng mặt', this)" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-radius: 0 8px 8px 0;">Vắng (@vangMat)</button>
+            </div>
+        }
     </div>
     
-    <div class="d-flex gap-3">
-        <a asp-action="Create" class="btn btn-outline-secondary d-flex align-items-center gap-2" style="border-color: var(--border-color); color: var(--text-secondary); border-radius: 8px;">
-            <i class="fa-solid fa-pen"></i> Thủ công
-        </a>
-        <button class="btn" style="background-color: rgba(146, 119, 248, 0.2); color: #d0c4ff; border: 1px solid rgba(146, 119, 248, 0.5); font-weight: 500; border-radius: 8px;">
-            <i class="fa-solid fa-download me-1"></i> Xuất Excel
-        </button>
-    </div>
+    @if (isAdmin)
+    {
+        <div class="d-flex gap-3">
+            <a asp-action="Create" class="btn btn-outline-secondary d-flex align-items-center gap-2" style="border-color: var(--border-color); color: var(--text-secondary); border-radius: 8px;">
+                <i class="fa-solid fa-pen"></i> Thủ công
+            </a>
+            <a asp-action="ExportCsv" class="btn d-flex align-items-center gap-2" style="background-color: rgba(146, 119, 248, 0.2); color: #d0c4ff; border: 1px solid rgba(146, 119, 248, 0.5); font-weight: 500; border-radius: 8px;">
+                <i class="fa-solid fa-download"></i> Xuất Excel
+            </a>
+        </div>
+    }
 </div>
 
 <div class="card-dark p-0 overflow-hidden">
@@ -70,7 +151,10 @@
                 <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">GIỜ RA</th>
                 <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">OT</th>
                 <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">TRẠNG THÁI</th>
-                <th class="text-secondary fw-semibold py-3 px-4 text-end" style="font-size: 0.75rem;"></th>
+                @if (isAdmin)
+                {
+                    <th class="text-secondary fw-semibold py-3 px-4 text-end" style="font-size: 0.75rem;">THAO TÁC</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -81,13 +165,13 @@
                 string statusBg = item.TrangThai == "Đúng giờ" ? "rgba(27, 185, 154, 0.15)" :
                                   item.TrangThai == "Trễ giờ" ? "rgba(245, 158, 11, 0.15)" : "rgba(243, 67, 67, 0.15)";
                                   
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td class="px-4 py-3 align-middle text-secondary">@item.MaNV</td>
+                <tr class="att-row" data-status="@item.TrangThai" style="border-bottom: 1px solid var(--border-color);">
+                    <td class="px-4 py-3 align-middle text-secondary fw-semibold">@item.MaNV</td>
                     <td class="px-4 py-3 align-middle">
                         <div class="d-flex align-items-center gap-3">
                             <div class="avatar" style="background-color: @item.AvatarColor;">@item.AvatarChar</div>
                             <div>
-                                <div class="fw-semibold">@item.NhanVienTen</div>
+                                <div class="fw-semibold text-white">@item.NhanVienTen</div>
                                 <div class="text-secondary" style="font-size: 0.75rem;">@item.PhongBanTen</div>
                             </div>
                         </div>
@@ -99,9 +183,53 @@
                     <td class="px-4 py-3 align-middle">
                         <span class="badge rounded-pill" style="background-color: @statusBg; color: @statusColor; padding: 6px 12px;"><i class="fa-solid fa-circle" style="font-size: 0.4rem; margin-right: 4px;"></i> @item.TrangThai</span>
                     </td>
-                    <td class="px-4 py-3 align-middle text-end">
-                        <button class="btn btn-sm" style="border: 1px solid var(--border-color); color: var(--accent-purple);">Sửa</button>
-                    </td>
+                    @if (isAdmin)
+                    {
+                        <td class="px-4 py-3 align-middle text-end">
+                            <button type="button" class="btn btn-sm" style="border: 1px solid var(--border-color); color: var(--accent-purple);"
+                                    data-bs-toggle="modal" data-bs-target="#editAttModal-@item.MaChamCong">
+                                Sửa
+                            </button>
+
+                            <div class="modal fade text-start" id="editAttModal-@item.MaChamCong" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content" style="background:#1a1b2e;border:1px solid var(--border-color);">
+                                        <div class="modal-header" style="border-color:var(--border-color);">
+                                            <h5 class="modal-title text-white">Cập nhật chấm công: @item.NhanVienTen</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form asp-action="EditAttendance" method="post">
+                                            <input type="hidden" name="maChamCong" value="@item.MaChamCong" />
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label text-secondary">Ca làm việc</label>
+                                                    <input type="text" class="form-control text-secondary" style="background:#0c0d14;border-color:var(--border-color);" value="@item.CaLam (Vào: @item.GioVao - Ra: @item.GioRa)" readonly />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-secondary">Trạng thái chấm công</label>
+                                                    <select name="trangThai" class="form-select text-white" style="background:#0c0d14;border-color:var(--border-color);">
+                                                        <option value="Đúng giờ" selected="@(item.TrangThai == "Đúng giờ")">Đúng giờ</option>
+                                                        <option value="Trễ giờ" selected="@(item.TrangThai == "Trễ giờ")">Trễ giờ</option>
+                                                        <option value="Vắng mặt" selected="@(item.TrangThai == "Vắng mặt")">Vắng mặt</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" style="border-color:var(--border-color);">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+            @if(!Model.Any())
+            {
+                <tr>
+                    <td colspan="@(isAdmin ? 8 : 7)" class="text-center py-4 text-secondary">Chưa có dữ liệu chấm công.</td>
                 </tr>
             }
         </tbody>
@@ -115,4 +243,24 @@
             border-bottom: 1px solid var(--border-color);
         }
     </style>
+    <script>
+        function filterAttendance(status, btn) {
+            const buttons = document.querySelectorAll('#attFilterGroup button');
+            buttons.forEach(b => {
+                b.style.backgroundColor = 'transparent';
+                b.classList.replace('text-white', 'text-secondary');
+            });
+            btn.style.backgroundColor = 'var(--accent-purple)';
+            btn.classList.replace('text-secondary', 'text-white');
+
+            const rows = document.querySelectorAll('.att-row');
+            rows.forEach(r => {
+                if (status === 'all' || r.getAttribute('data-status') === status) {
+                    r.style.display = '';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
+        }
+    </script>
 }

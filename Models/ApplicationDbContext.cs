@@ -25,7 +25,17 @@ namespace HTQLNS.Models
         {
             base.OnModelCreating(modelBuilder);
             
-            // You can add fluent API configurations here if needed
+            modelBuilder.Entity<YeuCauDoiCa>()
+                .HasOne(y => y.LichCu)
+                .WithMany()
+                .HasForeignKey(y => y.MaLichCu)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<YeuCauDoiCa>()
+                .HasOne(y => y.LichMoi)
+                .WithMany()
+                .HasForeignKey(y => y.MaLichMoi)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
