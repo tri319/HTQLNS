@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HTQLNS.Models;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace HTQLNS.Controllers
         public string TrangThai { get; set; } = string.Empty;
     }
 
+    [Authorize]
     public class LeaveController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -101,6 +103,7 @@ namespace HTQLNS.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Approve(string id, string type)
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(type)) return NotFound();

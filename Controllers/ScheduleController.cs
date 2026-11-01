@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HTQLNS.Models;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace HTQLNS.Controllers
         public Dictionary<DayOfWeek, ScheduleCellModel> Days { get; set; } = new Dictionary<DayOfWeek, ScheduleCellModel>();
     }
 
+    [Authorize]
     public class ScheduleController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -64,7 +66,7 @@ namespace HTQLNS.Controllers
                     if (nhanViens.TryGetValue(lich.MaNhanVien, out var tenNV))
                     {
                         var dayOfWeek = lich.NgayLam.DayOfWeek;
-                        row.Days[dayOfWeek].NhanVienNames.Add(tenNV);
+                        if (!row.Days[dayOfWeek].NhanVienNames.Contains(tenNV)) row.Days[dayOfWeek].NhanVienNames.Add(tenNV);
                     }
                 }
                 
@@ -75,6 +77,7 @@ namespace HTQLNS.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             ViewBag.NhanViens = await _context.NhanViens.ToListAsync();
@@ -83,6 +86,7 @@ namespace HTQLNS.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(LichPhanCong lichPhanCong)
         {
             lichPhanCong.MaLich = "LC" + DateTime.Now.Ticks.ToString().Substring(10, 4);

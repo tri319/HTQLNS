@@ -68,7 +68,7 @@
                         <div class="d-flex align-items-center gap-3">
                             <div class="avatar" style="background-color: @item.AvatarColor;">@item.AvatarChar</div>
                             <div>
-                                <div class="fw-semibold">@item.NhanVienTen</div>
+                                <div class="fw-semibold text-white">@item.NhanVienTen</div>
                                 <div class="text-secondary" style="font-size: 0.75rem;">@item.PhongBanTen</div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                         </div>
                     </td>
                     <td class="px-4 py-4 align-middle text-center">
-                        @if (item.TrangThai == "Chờ duyệt")
+                        @if (item.TrangThai == "Chờ duyệt" && User.IsInRole("Admin"))
                         {
                             <form asp-action="Approve" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="@item.MaDon" />

@@ -29,9 +29,12 @@
             <button type="button" class="btn text-secondary px-4" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0;">Danh sách</button>
         </div>
         
-        <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2 px-4" style="font-weight: 500; border-radius: 8px;">
-            <i class="fa-solid fa-plus"></i> Tạo ca
-        </a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2 px-4" style="font-weight: 500; border-radius: 8px;">
+                <i class="fa-solid fa-plus"></i> Tạo ca
+            </a>
+        }
     </div>
 </div>
 

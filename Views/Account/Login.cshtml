@@ -156,59 +156,104 @@
         <h2 class="mb-2 text-white fw-bold">Đăng nhập</h2>
         <p class="text-secondary mb-4 pb-2" style="font-size: 1.05rem;">Chào mừng trở lại! Vui lòng đăng nhập để tiếp tục.</p>
         
-        <form asp-controller="Account" asp-action="Login" method="post">
+        <form asp-controller="Account" asp-action="Login" method="post" id="loginForm">
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
             @if(ViewBag.Error != null)
             {
                 <div class="alert alert-danger" style="background-color: rgba(220, 53, 69, 0.1); border-color: #dc3545; color: #ff6b72;">
-                    @ViewBag.Error
+                    <i class="fa-solid fa-circle-exclamation me-2"></i>@ViewBag.Error
                 </div>
             }
-            <div class="mb-3">
-                <label class="form-label">Tên đăng nhập</label>
+            @if(TempData["Success"] != null)
+            {
+                <div class="alert alert-success" style="background-color: rgba(40, 167, 69, 0.1); border-color: #28a745; color: #28a745;">
+                    <i class="fa-solid fa-circle-check me-2"></i>@TempData["Success"]
+                </div>
+            }
+
+            <div class="mb-1">
+                <label class="form-label">Tài khoản hoặc Email</label>
                 <div class="input-icon-wrapper">
                     <i class="fa-regular fa-user input-icon"></i>
-                    <input type="text" name="username" class="form-control form-control-dark" placeholder="Nhập tên đăng nhập" value="admin" required>
+                    <input type="text" name="username" id="usernameInput" class="form-control form-control-dark" placeholder="Nhập tài khoản (vd: admin, nhanvien)" required />
                 </div>
             </div>
-            
-            <div class="mb-3">
-                <label class="form-label">
-                    Mật khẩu
-                    <a href="#" class="text-decoration-none" style="color: var(--accent-purple);">Quên mật khẩu?</a>
-                </label>
-                <div class="input-icon-wrapper">
-                    <i class="fa-solid fa-lock input-icon" style="color: #f59e0b;"></i>
-                    <input type="password" name="password" class="form-control form-control-dark" placeholder="••••••••" value="123456" required>
-                    <i class="fa-regular fa-eye password-toggle"></i>
-                </div>
-            </div>
-            
-            <div class="form-check mb-4">
-                <input class="form-check-input" type="checkbox" value="" id="rememberMe" checked>
-                <label class="form-check-label" for="rememberMe">
-                    Ghi nhớ đăng nhập trong 30 ngày
-                </label>
-            </div>
-            
-            <button type="submit" class="btn btn-login mb-4">
-                Đăng nhập <i class="fa-solid fa-arrow-right ms-2"></i>
-            </button>
 
-            <div class="text-center">
-                <span class="text-secondary">Chưa có tài khoản?</span>
-                <a asp-action="Register" class="text-decoration-none" style="color: var(--accent-purple); font-weight: 500;">Đăng ký ngay</a>
+            <div class="mb-2">
+                <label class="form-label">
+                    <span>Mật khẩu</span>
+                </label>
+                <div class="input-icon-wrapper mb-3">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input type="password" name="password" id="passwordInput" class="form-control form-control-dark" placeholder="Nhập mật khẩu" required />
+                </div>
             </div>
+
+            <button type="submit" class="btn-login mb-3">
+                <i class="fa-solid fa-right-to-bracket me-2"></i> Đăng nhập
+            </button>
         </form>
-        
-        <div class="demo-credentials">
-            <div class="demo-title">TÀI KHOẢN DEMO</div>
-            <div class="d-flex align-items-center mb-2" style="color: var(--text-secondary); font-size: 0.95rem;">
-                <i class="fa-solid fa-user me-3" style="color: #64748b;"></i> admin / nhanvien
+
+        <div class="d-flex align-items-center my-3">
+            <hr class="flex-grow-1" style="border-color: var(--border-color);" />
+            <span class="px-3 text-secondary" style="font-size: 0.85rem;">HOẶC</span>
+            <hr class="flex-grow-1" style="border-color: var(--border-color);" />
+        </div>
+
+        <form asp-controller="Account" asp-action="ExternalLogin" method="post" class="mb-4">
+            <input type="hidden" name="provider" value="Google" />
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+            <button type="submit" class="btn btn-outline-light w-100" style="height: 50px; border-radius: 8px; border-color: var(--border-color); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                </svg>
+                <span>Tiếp tục với Google</span>
+            </button>
+        </form>
+
+        <!-- Tài khoản phân quyền có sẵn để báo cáo đồ án -->
+        <div class="demo-credentials mt-4">
+            <div class="demo-title d-flex align-items-center justify-content-between">
+                <span><i class="fa-solid fa-bolt text-warning me-1"></i> Đăng nhập nhanh (Báo cáo đồ án)</span>
+                <span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.65rem;">1-Click Demo</span>
             </div>
-            <div class="d-flex align-items-center" style="color: var(--text-secondary); font-size: 0.95rem;">
-                <i class="fa-solid fa-key me-3" style="color: #f59e0b;"></i> Mật khẩu: 123456
+            
+            <div class="row g-2">
+                <div class="col-6">
+                    <form asp-controller="Account" asp-action="QuickLogin" method="post">
+                        <input type="hidden" name="role" value="Admin" />
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                        <button type="submit" class="btn w-100 text-start p-3" style="background: rgba(146, 119, 248, 0.12); border: 1px solid rgba(146, 119, 248, 0.4); border-radius: 10px; color: white; transition: all 0.2s;">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <i class="fa-solid fa-user-shield" style="color: var(--accent-purple);"></i>
+                                <span class="fw-bold" style="font-size: 0.9rem; color: #d0c4ff;">Quyền Admin</span>
+                            </div>
+                            <div class="text-secondary" style="font-size: 0.75rem;">TK: <code class="text-light">admin</code></div>
+                            <div class="text-secondary" style="font-size: 0.75rem;">MK: <code class="text-light">123456</code></div>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-6">
+                    <form asp-controller="Account" asp-action="QuickLogin" method="post">
+                        <input type="hidden" name="role" value="NhanVien" />
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                        <button type="submit" class="btn w-100 text-start p-3" style="background: rgba(27, 185, 154, 0.12); border: 1px solid rgba(27, 185, 154, 0.4); border-radius: 10px; color: white; transition: all 0.2s;">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <i class="fa-solid fa-user-check" style="color: var(--accent-green);"></i>
+                                <span class="fw-bold" style="font-size: 0.9rem; color: #6ee7b7;">Nhân viên</span>
+                            </div>
+                            <div class="text-secondary" style="font-size: 0.75rem;">TK: <code class="text-light">nhanvien</code></div>
+                            <div class="text-secondary" style="font-size: 0.75rem;">MK: <code class="text-light">123456</code></div>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
+
+
     </div>
 
 </body>

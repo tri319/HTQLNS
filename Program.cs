@@ -17,6 +17,13 @@ namespace HTQLNS
                 {
                     options.LoginPath = "/Account/Login";
                     options.AccessDeniedPath = "/Account/AccessDenied";
+                })
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+                    options.ClientId = googleAuthNSection["ClientId"] ?? throw new InvalidOperationException("Missing Google ClientId");
+                    options.ClientSecret = googleAuthNSection["ClientSecret"] ?? throw new InvalidOperationException("Missing Google ClientSecret");
+                    options.CallbackPath = "/signin-google";
                 });
             
             // Add DbContext
@@ -32,6 +39,7 @@ namespace HTQLNS
                 try
                 {
                     var context = services.GetRequiredService<HTQLNS.Models.ApplicationDbContext>();
+                    
                     HTQLNS.Models.DbSeeder.Seed(context);
                 }
                 catch (Exception ex)

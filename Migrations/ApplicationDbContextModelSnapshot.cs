@@ -29,7 +29,7 @@ namespace HTQLNS.Migrations
 
                     b.Property<string>("MaLich")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ThoiGianCheckout")
                         .HasColumnType("datetime2");
@@ -42,6 +42,8 @@ namespace HTQLNS.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("MaChamCong");
+
+                    b.HasIndex("MaLich");
 
                     b.ToTable("ChamCongs");
                 });
@@ -77,7 +79,7 @@ namespace HTQLNS.Migrations
 
                     b.Property<string>("MaNhanVien")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TrangThai")
                         .HasMaxLength(50)
@@ -87,6 +89,8 @@ namespace HTQLNS.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("MaDon");
+
+                    b.HasIndex("MaNhanVien");
 
                     b.ToTable("DonXinNghis");
                 });
@@ -98,11 +102,11 @@ namespace HTQLNS.Migrations
 
                     b.Property<string>("MaLoaiCa")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaNhanVien")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("NgayLam")
                         .HasColumnType("datetime2");
@@ -112,6 +116,10 @@ namespace HTQLNS.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("MaLich");
+
+                    b.HasIndex("MaLoaiCa");
+
+                    b.HasIndex("MaNhanVien");
 
                     b.ToTable("LichPhanCongs");
                 });
@@ -153,17 +161,24 @@ namespace HTQLNS.Migrations
 
                     b.Property<string>("MaChucVu")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaPhongBan")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("NgaySinh")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SDT")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("MaNhanVien");
+
+                    b.HasIndex("MaChucVu");
+
+                    b.HasIndex("MaPhongBan");
 
                     b.ToTable("NhanViens");
                 });
@@ -179,7 +194,7 @@ namespace HTQLNS.Migrations
 
                     b.Property<string>("MaTaiKhoan")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NoiDung")
                         .HasColumnType("nvarchar(max)");
@@ -188,6 +203,8 @@ namespace HTQLNS.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("MaLog");
+
+                    b.HasIndex("MaTaiKhoan");
 
                     b.ToTable("NhatKyThaoTacs");
                 });
@@ -212,18 +229,22 @@ namespace HTQLNS.Migrations
                     b.Property<string>("MaTaiKhoan")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("HoTen")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("MaNhanVien")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaVaiTro")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MatKhau")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("NgaySinh")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TenDangNhap")
                         .IsRequired()
@@ -234,6 +255,10 @@ namespace HTQLNS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MaTaiKhoan");
+
+                    b.HasIndex("MaNhanVien");
+
+                    b.HasIndex("MaVaiTro");
 
                     b.ToTable("TaiKhoans");
                 });
@@ -263,15 +288,15 @@ namespace HTQLNS.Migrations
 
                     b.Property<string>("MaLichCu")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaLichMoi")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaNhanVien")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("NgayGui")
                         .HasColumnType("datetime2");
@@ -282,7 +307,126 @@ namespace HTQLNS.Migrations
 
                     b.HasKey("MaYeuCau");
 
+                    b.HasIndex("MaLichCu");
+
+                    b.HasIndex("MaLichMoi");
+
+                    b.HasIndex("MaNhanVien");
+
                     b.ToTable("YeuCauDoiCas");
+                });
+
+            modelBuilder.Entity("HTQLNS.Models.ChamCong", b =>
+                {
+                    b.HasOne("HTQLNS.Models.LichPhanCong", "LichPhanCong")
+                        .WithMany()
+                        .HasForeignKey("MaLich")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LichPhanCong");
+                });
+
+            modelBuilder.Entity("HTQLNS.Models.DonXinNghi", b =>
+                {
+                    b.HasOne("HTQLNS.Models.NhanVien", "NhanVien")
+                        .WithMany()
+                        .HasForeignKey("MaNhanVien")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NhanVien");
+                });
+
+            modelBuilder.Entity("HTQLNS.Models.LichPhanCong", b =>
+                {
+                    b.HasOne("HTQLNS.Models.LoaiCaLam", "LoaiCaLam")
+                        .WithMany()
+                        .HasForeignKey("MaLoaiCa")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HTQLNS.Models.NhanVien", "NhanVien")
+                        .WithMany()
+                        .HasForeignKey("MaNhanVien")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LoaiCaLam");
+
+                    b.Navigation("NhanVien");
+                });
+
+            modelBuilder.Entity("HTQLNS.Models.NhanVien", b =>
+                {
+                    b.HasOne("HTQLNS.Models.ChucVu", "ChucVu")
+                        .WithMany()
+                        .HasForeignKey("MaChucVu")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HTQLNS.Models.PhongBan", "PhongBan")
+                        .WithMany()
+                        .HasForeignKey("MaPhongBan")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChucVu");
+
+                    b.Navigation("PhongBan");
+                });
+
+            modelBuilder.Entity("HTQLNS.Models.NhatKyThaoTac", b =>
+                {
+                    b.HasOne("HTQLNS.Models.TaiKhoan", "TaiKhoan")
+                        .WithMany()
+                        .HasForeignKey("MaTaiKhoan")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TaiKhoan");
+                });
+
+            modelBuilder.Entity("HTQLNS.Models.TaiKhoan", b =>
+                {
+                    b.HasOne("HTQLNS.Models.NhanVien", "NhanVien")
+                        .WithMany()
+                        .HasForeignKey("MaNhanVien");
+
+                    b.HasOne("HTQLNS.Models.VaiTro", "VaiTro")
+                        .WithMany()
+                        .HasForeignKey("MaVaiTro");
+
+                    b.Navigation("NhanVien");
+
+                    b.Navigation("VaiTro");
+                });
+
+            modelBuilder.Entity("HTQLNS.Models.YeuCauDoiCa", b =>
+                {
+                    b.HasOne("HTQLNS.Models.LichPhanCong", "LichCu")
+                        .WithMany()
+                        .HasForeignKey("MaLichCu")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HTQLNS.Models.LichPhanCong", "LichMoi")
+                        .WithMany()
+                        .HasForeignKey("MaLichMoi")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HTQLNS.Models.NhanVien", "NhanVien")
+                        .WithMany()
+                        .HasForeignKey("MaNhanVien")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LichCu");
+
+                    b.Navigation("LichMoi");
+
+                    b.Navigation("NhanVien");
                 });
 #pragma warning restore 612, 618
         }

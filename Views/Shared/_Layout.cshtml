@@ -1,3 +1,4 @@
+@inject HTQLNS.Models.ApplicationDbContext DbContext
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -81,6 +82,30 @@
                     <a asp-controller="Report" asp-action="Index" class="menu-link">
                         <i class="fa-solid fa-chart-line menu-icon"></i>
                         <span>Báo cáo</span>
+                    </a>
+                </li>
+            }
+
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="menu-title" style="margin-top:8px;">Quản trị hệ thống</li>
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "PendingAccounts" ? "active" : "")">
+                    <a asp-controller="Admin" asp-action="PendingAccounts" class="menu-link">
+                        <i class="fa-solid fa-user-clock menu-icon" style="color:#f59e0b;"></i>
+                        <span>Duyệt tài khoản</span>
+                        @{
+                            var pendingCount = DbContext.TaiKhoans.Count(t => t.TrangThai == "Chờ duyệt");
+                        }
+                        @if (pendingCount > 0)
+                        {
+                            <span class="badge bg-warning ms-auto">@pendingCount</span>
+                        }
+                    </a>
+                </li>
+                <li class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "AllAccounts" ? "active" : "")">
+                    <a asp-controller="Admin" asp-action="AllAccounts" class="menu-link">
+                        <i class="fa-solid fa-users-gear menu-icon" style="color:#a881e6;"></i>
+                        <span>Quản lý tài khoản</span>
                     </a>
                 </li>
             }
