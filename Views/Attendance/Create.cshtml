@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Chấm Công Thủ Công";
     var lichPhanCongs = ViewBag.LichPhanCongs as IEnumerable<HTQLNS.Models.LichPhanCong>;
+    var nvDict = ViewBag.NhanVienDict as Dictionary<string, string> ?? new Dictionary<string, string>();
+    var caDict = ViewBag.LoaiCaDict as Dictionary<string, string> ?? new Dictionary<string, string>();
 }
 
 <div class="d-flex align-items-center mb-4 gap-3">
@@ -9,7 +11,7 @@
     <h4 class="mb-0 fw-bold">Thêm Chấm Công Thủ Công</h4>
 </div>
 
-<div class="card-dark" style="max-width: 600px;">
+<div class="card-dark" style="max-width: 650px;">
     <form asp-action="Create" method="post">
         <div class="row">
             <div class="col-md-12 mb-3">
@@ -20,7 +22,9 @@
                     {
                         foreach (var lich in lichPhanCongs)
                         {
-                            <option value="@lich.MaLich">@lich.MaNhanVien - @lich.MaLoaiCa (@lich.NgayLam.ToString("dd/MM/yyyy"))</option>
+                            string tenNV = nvDict.ContainsKey(lich.MaNhanVien) ? nvDict[lich.MaNhanVien] : lich.MaNhanVien;
+                            string tenCa = caDict.ContainsKey(lich.MaLoaiCa) ? caDict[lich.MaLoaiCa] : lich.MaLoaiCa;
+                            <option value="@lich.MaLich">@tenNV (@lich.MaNhanVien) — @tenCa (@lich.NgayLam.ToString("dd/MM/yyyy"))</option>
                         }
                     }
                 </select>
@@ -28,13 +32,13 @@
             
             <div class="col-md-6 mb-3">
                 <label class="form-label text-secondary">Thời gian Check-in</label>
-                <input asp-for="ThoiGianChekin" type="datetime-local" class="form-control text-white bg-dark border-secondary" />
+                <input asp-for="ThoiGianChekin" type="datetime-local" class="form-control text-white bg-dark border-secondary" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
             </div>
             
             <div class="col-md-6 mb-4">
                 <label class="form-label text-secondary">Thời gian Check-out</label>
                 <input asp-for="ThoiGianCheckout" type="datetime-local" class="form-control text-white bg-dark border-secondary" />
-                <div class="form-text text-secondary">Để trống nếu đang trong ca</div>
+                <div class="form-text text-secondary">Để trống nếu nhân viên đang trong ca</div>
             </div>
         </div>
         

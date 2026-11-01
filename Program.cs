@@ -21,8 +21,8 @@ namespace HTQLNS
                 .AddGoogle(options =>
                 {
                     IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
-                    options.ClientId = googleAuthNSection["ClientId"] ?? throw new InvalidOperationException("Missing Google ClientId");
-                    options.ClientSecret = googleAuthNSection["ClientSecret"] ?? throw new InvalidOperationException("Missing Google ClientSecret");
+                    options.ClientId = googleAuthNSection["ClientId"] ?? "YOUR_GOOGLE_CLIENT_ID";
+                    options.ClientSecret = googleAuthNSection["ClientSecret"] ?? "YOUR_GOOGLE_CLIENT_SECRET";
                     options.CallbackPath = "/signin-google";
                 });
             

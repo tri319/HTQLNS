@@ -7,7 +7,7 @@
 
 <div class="d-flex align-items-center mb-4 gap-3">
     <a asp-action="Index" class="btn btn-dark" style="background-color: var(--card-bg); border-color: var(--border-color);"><i class="fa-solid fa-arrow-left"></i></a>
-    <h4 class="mb-0 fw-bold">Sửa Nhân Viên: @Model.HoTen</h4>
+    <h4 class="mb-0 fw-bold">Sửa Nhân Viên: @Model.HoTen (@Model.MaNhanVien)</h4>
 </div>
 
 <div class="card-dark">
@@ -16,8 +16,13 @@
         
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label text-secondary">Họ và tên</label>
+                <label class="form-label text-secondary">Họ và tên <span class="text-danger">*</span></label>
                 <input asp-for="HoTen" class="form-control text-white bg-dark border-secondary" required />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-secondary">Ngày sinh</label>
+                <input asp-for="NgaySinh" type="date" class="form-control text-white bg-dark border-secondary" />
             </div>
             
             <div class="col-md-6 mb-3">
@@ -31,7 +36,7 @@
             </div>
             
             <div class="col-md-6 mb-3">
-                <label class="form-label text-secondary">Phòng ban</label>
+                <label class="form-label text-secondary">Phòng ban <span class="text-danger">*</span></label>
                 <select asp-for="MaPhongBan" class="form-select text-white bg-dark border-secondary" required>
                     <option value="">-- Chọn phòng ban --</option>
                     @if (phongBans != null)
@@ -45,7 +50,7 @@
             </div>
             
             <div class="col-md-6 mb-4">
-                <label class="form-label text-secondary">Chức vụ</label>
+                <label class="form-label text-secondary">Chức vụ <span class="text-danger">*</span></label>
                 <select asp-for="MaChucVu" class="form-select text-white bg-dark border-secondary" required>
                     <option value="">-- Chọn chức vụ --</option>
                     @if (chucVus != null)

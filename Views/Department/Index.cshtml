@@ -1,20 +1,40 @@
 @model IEnumerable<HTQLNS.Controllers.DepartmentViewModel>
 @{
     ViewData["Title"] = "Phòng ban & Chức vụ";
+    var allChucVus = ViewBag.AllChucVus as List<HTQLNS.Models.ChucVu> ?? new List<HTQLNS.Models.ChucVu>();
+    var chucVuDict = ViewBag.ChucVuDict as Dictionary<string, string> ?? new Dictionary<string, string>();
+    var allNhanViens = ViewBag.AllNhanViens as List<HTQLNS.Models.NhanVien> ?? new List<HTQLNS.Models.NhanVien>();
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+@if (TempData["Success"] != null)
+{
+    <div class="alert mb-4" style="background: rgba(27,185,154,.15); border:1px solid #1bb99a; color:#1bb99a; border-radius:8px; padding:12px 16px;">
+        <i class="fa-solid fa-check-circle me-2"></i>@TempData["Success"]
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div class="btn-group" role="group">
-        <button type="button" class="btn text-white px-4 py-2" style="background-color: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-right: none; border-radius: 8px 0 0 8px;">Phòng ban</button>
-        <button type="button" class="btn text-secondary px-4 py-2" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0;">Chức vụ</button>
+        <button type="button" id="tabBtnDept" onclick="switchDeptTab('dept')" class="btn text-white px-4 py-2" style="background-color: var(--accent-purple); border: 1px solid var(--accent-purple); border-radius: 8px 0 0 8px;">
+            Phòng ban (@Model.Count())
+        </button>
+        <button type="button" id="tabBtnPos" onclick="switchDeptTab('pos')" class="btn text-secondary px-4 py-2" style="background-color: transparent; border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0;">
+            Chức vụ (@allChucVus.Count)
+        </button>
     </div>
     
-    <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2 px-4 py-2" style="font-weight: 500; border-radius: 8px;">
-        <i class="fa-solid fa-plus"></i> Thêm phòng ban
-    </a>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-light d-flex align-items-center gap-2 px-3 py-2" style="border-color: var(--border-color); border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#addPositionModal">
+            <i class="fa-solid fa-briefcase"></i> Thêm chức vụ
+        </button>
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2 px-4 py-2" style="font-weight: 500; border-radius: 8px;">
+            <i class="fa-solid fa-plus"></i> Thêm phòng ban
+        </a>
+    </div>
 </div>
 
-<div class="row">
+<!-- Tab 1: Danh sách Phòng ban -->
+<div id="deptSection" class="row">
     @foreach (var item in Model)
     {
         string colorVar = $"var(--{item.ColorClass})";
@@ -24,18 +44,21 @@
                        "rgba(245, 158, 11, 0.15)";
                        
         <div class="col-md-6 mb-4">
-            <div class="card-dark h-100 position-relative" style="border-top: 4px solid @colorVar;">
+            <div class="card-dark h-100 d-flex flex-column position-relative" style="border-top: 4px solid @colorVar;">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
-                        <h5 class="mb-1 fw-bold">@item.TenPhongBan</h5>
-                        <div class="text-secondary" style="font-size: 0.8rem;">@item.MaPhongBan</div>
+                        <h5 class="mb-1 fw-bold text-white">@item.TenPhongBan</h5>
+                        <div class="text-secondary" style="font-size: 0.8rem;">Mã PB: @item.MaPhongBan</div>
                     </div>
-                    <div class="fw-bold" style="font-size: 2rem; color: @colorVar; line-height: 1;">@item.SoLuongNhanVien</div>
+                    <div class="text-end">
+                        <div class="fw-bold" style="font-size: 2rem; color: @colorVar; line-height: 1;">@item.SoLuongNhanVien</div>
+                        <small class="text-secondary" style="font-size: 0.7rem;">Nhân sự</small>
+                    </div>
                 </div>
                 
-                <div class="mb-4">
-                    <div class="text-secondary mb-1" style="font-size: 0.85rem;">Trưởng phòng</div>
-                    <div style="font-weight: 500;">@item.TruongPhong</div>
+                <div class="mb-3">
+                    <div class="text-secondary mb-1" style="font-size: 0.8rem;">Quản lý / Phụ trách</div>
+                    <div class="text-white" style="font-weight: 500;"><i class="fa-solid fa-user-tie me-2" style="color: @colorVar;"></i>@item.TruongPhong</div>
                 </div>
                 
                 <div class="d-flex flex-wrap gap-2 mb-4">
@@ -54,13 +77,173 @@
                 
                 <div class="row gx-3 mt-auto">
                     <div class="col-6">
-                        <button class="btn w-100 py-2" style="border: 1px solid var(--border-color); color: var(--text-secondary); border-radius: 8px;">Chỉnh sửa</button>
+                        <button type="button" class="btn w-100 py-2" style="border: 1px solid var(--border-color); color: var(--text-secondary); border-radius: 8px;"
+                                data-bs-toggle="modal" data-bs-target="#editDeptModal-@item.MaPhongBan">
+                            <i class="fa-solid fa-pen me-1"></i> Chỉnh sửa
+                        </button>
                     </div>
                     <div class="col-6">
-                        <button class="btn w-100 py-2" style="background-color: @bgVar; color: @colorVar; border: none; border-radius: 8px;">Chi tiết</button>
+                        <button type="button" class="btn w-100 py-2" style="background-color: @bgVar; color: @colorVar; border: none; border-radius: 8px;"
+                                data-bs-toggle="modal" data-bs-target="#detailDeptModal-@item.MaPhongBan">
+                            <i class="fa-solid fa-users me-1"></i> Chi tiết (@item.SoLuongNhanVien)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Chỉnh sửa Phòng ban -->
+        <div class="modal fade" id="editDeptModal-@item.MaPhongBan" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background:#1a1b2e;border:1px solid var(--border-color);">
+                    <div class="modal-header" style="border-color:var(--border-color);">
+                        <h5 class="modal-title text-white">Chỉnh sửa Phòng ban (@item.MaPhongBan)</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form asp-action="EditDepartment" method="post">
+                        <input type="hidden" name="maPhongBan" value="@item.MaPhongBan" />
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label text-secondary">Tên phòng ban</label>
+                                <input type="text" name="tenPhongBan" class="form-control text-white" style="background:#0c0d14;border-color:var(--border-color);" value="@item.TenPhongBan" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="border-color:var(--border-color);">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Chi tiết Nhân sự Phòng ban -->
+        <div class="modal fade" id="detailDeptModal-@item.MaPhongBan" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="background:#1a1b2e;border:1px solid var(--border-color);">
+                    <div class="modal-header" style="border-color:var(--border-color);">
+                        <h5 class="modal-title text-white">Nhân sự thuộc @item.TenPhongBan (@item.SoLuongNhanVien NV)</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if (item.NhanViens.Any())
+                        {
+                            <table class="table table-borderless custom-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-secondary">MÃ NV</th>
+                                        <th class="text-secondary">HỌ TÊN</th>
+                                        <th class="text-secondary">CHỨC VỤ</th>
+                                        <th class="text-secondary">EMAIL / SĐT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var nv in item.NhanViens)
+                                    {
+                                        <tr style="border-bottom: 1px solid var(--border-color);">
+                                            <td class="text-secondary">@nv.MaNhanVien</td>
+                                            <td class="text-white fw-semibold">@nv.HoTen</td>
+                                            <td><span class="badge" style="background:@bgVar;color:@colorVar;">@(chucVuDict.ContainsKey(nv.MaChucVu) ? chucVuDict[nv.MaChucVu] : nv.MaChucVu)</span></td>
+                                            <td class="text-secondary" style="font-size:0.85rem;">@(nv.Email ?? "—") &bull; @(nv.SDT ?? "—")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p class="text-secondary text-center py-3 mb-0">Chưa có nhân viên nào trong phòng ban này.</p>
+                        }
+                    </div>
+                    <div class="modal-footer" style="border-color:var(--border-color);">
+                        <a asp-controller="Employee" asp-action="Index" asp-route-phongBan="@item.MaPhongBan" class="btn btn-primary btn-sm">Quản lý trong mục Nhân sự</a>
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
         </div>
     }
 </div>
+
+<!-- Tab 2: Danh sách Chức vụ -->
+<div id="posSection" class="card-dark p-0 overflow-hidden d-none">
+    <table class="table table-borderless mb-0 custom-table">
+        <thead style="border-bottom: 1px solid var(--border-color);">
+            <tr>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">MÃ CHỨC VỤ</th>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">TÊN CHỨC VỤ</th>
+                <th class="text-secondary fw-semibold py-3 px-4" style="font-size: 0.75rem;">MÔ TẢ CÔNG VIỆC</th>
+                <th class="text-secondary fw-semibold py-3 px-4 text-center" style="font-size: 0.75rem;">SỐ LƯỢNG NHÂN SỰ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cv in allChucVus)
+            {
+                int countNV = allNhanViens.Count(n => n.MaChucVu == cv.MaChucVu);
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td class="px-4 py-3 align-middle text-secondary fw-semibold">@cv.MaChucVu</td>
+                    <td class="px-4 py-3 align-middle text-white fw-semibold">@cv.TenChucVu</td>
+                    <td class="px-4 py-3 align-middle text-secondary">@(cv.MoTa ?? "—")</td>
+                    <td class="px-4 py-3 align-middle text-center">
+                        <span class="badge rounded-pill" style="background: rgba(146,119,248,0.15); color: #d0c4ff; padding: 6px 14px;">@countNV NV</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Thêm Chức vụ mới -->
+<div class="modal fade" id="addPositionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#1a1b2e;border:1px solid var(--border-color);">
+            <div class="modal-header" style="border-color:var(--border-color);">
+                <h5 class="modal-title text-white">Thêm Chức Vụ Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="CreatePosition" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary">Tên chức vụ <span class="text-danger">*</span></label>
+                        <input type="text" name="tenChucVu" class="form-control text-white" style="background:#0c0d14;border-color:var(--border-color);" placeholder="VD: Trưởng ca Pha chế" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary">Mô tả công việc</label>
+                        <textarea name="moTa" class="form-control text-white" style="background:#0c0d14;border-color:var(--border-color);" rows="3" placeholder="Nhập mô tả trách nhiệm..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-color:var(--border-color);">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu chức vụ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function switchDeptTab(tab) {
+            const deptSec = document.getElementById('deptSection');
+            const posSec = document.getElementById('posSection');
+            const btnDept = document.getElementById('tabBtnDept');
+            const btnPos = document.getElementById('tabBtnPos');
+
+            if (tab === 'dept') {
+                deptSec.classList.remove('d-none');
+                posSec.classList.add('d-none');
+                btnDept.style.backgroundColor = 'var(--accent-purple)';
+                btnDept.classList.replace('text-secondary', 'text-white');
+                btnPos.style.backgroundColor = 'transparent';
+                btnPos.classList.replace('text-white', 'text-secondary');
+            } else {
+                deptSec.classList.add('d-none');
+                posSec.classList.remove('d-none');
+                btnPos.style.backgroundColor = 'var(--accent-purple)';
+                btnPos.classList.replace('text-secondary', 'text-white');
+                btnDept.style.backgroundColor = 'transparent';
+                btnDept.classList.replace('text-white', 'text-secondary');
+            }
+        }
+    </script>
+}
